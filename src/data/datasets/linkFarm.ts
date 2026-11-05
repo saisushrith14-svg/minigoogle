@@ -144,5 +144,124 @@ export const linkFarmDataset: Dataset = {
       links: ['lf-regulator', 'lf-real-review'],
       educationalRole: 'Legitimate commercial operator that cites the regulator and independent review.',
     },
+    {
+      id: 'lf-doorway-epsilon',
+      url: 'https://www.free-spins-network-e.example/slots',
+      title: 'Free Spins & Slots Portal E: Top Gaming Directory',
+      headings: [
+        'Free Spins Directory',
+        'Featured Casino Partners',
+        'Partner Links',
+      ],
+      metaDescription:
+        'Syndicated directory of free slot machine spins and online casino bonus codes.',
+      content:
+        'Explore daily free spin opportunities across verified web gaming platforms. Our automated directory indexes leading gaming destinations for players looking for the ultimate online gaming thrills.',
+      category: 'Gambling / Doorway',
+      links: ['lf-casino-spam', 'lf-doorway-alpha', 'lf-doorway-zeta'],
+      educationalRole: 'Additional doorway satellite artificially inflating the central casino spam ring.',
+    },
+    {
+      id: 'lf-doorway-zeta',
+      url: 'https://www.jackpot-directory-vault-z.example/roulette',
+      title: 'Jackpot Vault Z: Automated Online Gaming Directory',
+      headings: [
+        'Online Jackpot Directory',
+        'High Roller Tables',
+        'Affiliate Network',
+      ],
+      metaDescription:
+        'Automated directory linking top roulette tables, poker rooms, and gaming doorways.',
+      content:
+        'The jackpot vault gathers internet gaming links into a single consolidated network. Access high payout slot machines and premier online casino games across our partnered affiliate ring.',
+      category: 'Gambling / Doorway',
+      links: ['lf-casino-spam', 'lf-doorway-delta', 'lf-doorway-epsilon'],
+      educationalRole: 'Syndicated affiliate doorway linking reciprocal members of the spam link farm.',
+    },
+    {
+      id: 'lf-gambling-help',
+      url: 'https://www.responsible-gambling-trust.org/support',
+      title: 'Responsible Gaming Trust: Free Confidential Addiction Support',
+      headings: [
+        '24/7 Helpline',
+        'Self-Exclusion Tools',
+        'Signs of Problem Gambling',
+      ],
+      metaDescription:
+        'Non-profit resource offering self-exclusion tools, counseling, and problem gambling helplines.',
+      content:
+        'If gambling is affecting your life or budget, free confidential assistance is available around the clock. We provide guidance on blocking gambling websites and finding certified counselors. Consult official guidelines from the Gambling Commission.',
+      category: 'Non-Profit / Support',
+      links: ['lf-regulator', 'lf-real-review'],
+      educationalRole: 'Public service non-profit linking to regulatory agencies and legitimate reviews.',
+    },
+    {
+      id: 'lf-news-daily',
+      url: 'https://www.igaming-business-gazette.com/compliance',
+      title: 'iGaming Business Gazette: Regulatory Compliance & Market Trends',
+      headings: [
+        'Regulatory Enforcement',
+        'Licensing Standards',
+        'Blacklist Updates',
+      ],
+      metaDescription:
+        'Industry news covering gaming license enforcement actions, consumer laws, and affiliate marketing rules.',
+      content:
+        'Regulators across Europe and North America have announced stringent audits targeting deceptive doorway networks and unvetted online affiliate rings. Market operators are advised to maintain direct links with the licensing commission.',
+      category: 'News / Trade',
+      links: ['lf-regulator', 'lf-operator'],
+      educationalRole: 'Trade publication reporting on enforcement against manipulative link schemes.',
+    },
+    {
+      id: 'lf-poker-championship',
+      url: 'https://www.international-poker-tour.org/standings',
+      title: 'International Tournament Poker League: Official Player Standings',
+      headings: [
+        'Tournament Leaderboard',
+        'Championship Schedule',
+        'Rules & Ethics',
+      ],
+      metaDescription:
+        'Official standings, event schedules, and tournament rules for international poker competitions.',
+      content:
+        'Follow the annual world poker championship tour. Check live point standings, upcoming invitational events, and licensed host venues. Players should ensure they participate exclusively through regulated platforms.',
+      category: 'Sports / Gaming',
+      links: ['lf-operator', 'lf-regulator'],
+      educationalRole: 'Sports gaming directory with authentic links to certified operators and regulators.',
+    },
+    {
+      id: 'lf-state-lottery',
+      url: 'https://www.state-lottery-commission.gov/public-funds',
+      title: 'State Lottery Commission: Benefiting Public Education & Parks',
+      headings: [
+        'Draw Results & Winning Numbers',
+        'Where the Money Goes',
+        'Responsible Play Guidelines',
+      ],
+      metaDescription:
+        'Official state lottery drawing results, jackpot prize claims, and educational fund transfers.',
+      content:
+        'The State Lottery has transferred over two billion dollars to public elementary education and state parks. Players must be 18 or older to purchase draw tickets. We cooperate with the Gambling Commission to enforce statutory gaming restrictions.',
+      category: 'Government / Lottery',
+      links: ['lf-regulator', 'lf-gambling-help'],
+      educationalRole: 'Government lottery portal conferring legitimate authority onto public service nodes.',
+    },
+    {
+      id: 'lf-consumer-alerts',
+      url: 'https://www.consumer-protection-alliance.org/fraud/online-gaming',
+      title: 'Consumer Protection Alliance: Exposing Fabricated Review Farms',
+      headings: [
+        'How Link Farms Deceive Search Engines',
+        'Spotting Fake Doorways',
+        'Consumer Redress',
+      ],
+      metaDescription:
+        'Educational bulletin exposing how reciprocal link rings manufacture artificial web authority.',
+      content:
+        'Our fraud investigation team explains how fraudulent gaming rings construct dozens of thin doorway sites that mutually link to one another to manipulate early search engine algorithms. Always cross-reference consumer claims with independent audits from Consumer Gaming Gazette.',
+      category: 'Consumer Advocacy',
+      links: ['lf-real-review', 'lf-regulator', 'lf-gambling-help'],
+      educationalRole: 'Advocacy watchdog node detailing link farm topology and directing users to legitimate reviews.',
+    },
   ],
 };

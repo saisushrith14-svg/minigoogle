@@ -1,49 +1,19 @@
+import { useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Activity,
-  ArrowRight,
-  BarChart3,
-  BookOpen,
-  Database,
-  FileText,
-  FlaskConical,
-  GitCompare,
-  Globe2,
-  Layers,
-  Link2,
-  Network,
-  Sparkles,
-  TrendingUp,
-} from 'lucide-react';
 import type { RankingMode } from '../types';
 import { useApp } from '../state/AppContext';
-import { buildGraphTopology } from '../utils/graphUtils';
+import { RetroLogo } from '../components/common/RetroLogo';
 import { MODE_DESCRIPTIONS, MODE_LABELS, SCENARIO_LABELS, formatScore } from '../utils/format';
-import { Badge, Button, Card, SectionHeading } from '../components/ui/Primitives';
-import { SearchBar } from '../components/search/SearchBar';
 
-const MODE_ICONS: Readonly<Record<RankingMode, typeof FileText>> = {
-  keyword: FileText,
-  pagerank: Link2,
-  hybrid: Layers,
-  experimental: Activity,
-};
-
-const MODE_TONES: Readonly<Record<RankingMode, 'amber' | 'violet' | 'blue' | 'green'>> = {
-  keyword: 'amber',
-  pagerank: 'violet',
-  hybrid: 'blue',
-  experimental: 'green',
-};
-
-const SCENARIO_ICONS = {
-  'keyword-stuffing': FileText,
-  'authority-problem': Globe2,
-  'link-farm': Link2,
-  'new-website': Sparkles,
-  'relevance-vs-popularity': TrendingUp,
-  'scientific-network': FlaskConical,
-} as const;
+const CURIOUS_QUERIES = [
+  'Stanford University computer science',
+  'The PageRank Citation Ranking: Bringing Order to the Web',
+  'DEC AlphaServer 4100 Stanford backrub crawler',
+  'cheap flights',
+  'cancer research',
+  'sourdough starter guide',
+  'machine learning',
+];
 
 const MODES: readonly RankingMode[] = ['keyword', 'pagerank', 'hybrid', 'experimental'];
 
@@ -53,319 +23,367 @@ export function HomePage() {
     datasets,
     setDatasetId,
     query,
-    comparison,
-    searchResponse,
+    setQuery,
+    mode,
     setMode,
-    simulationIsCurrent,
+    comparison,
   } = useApp();
   const navigate = useNavigate();
-  const topology = buildGraphTopology(dataset.pages);
-  const linkCount = Object.values(topology.outDegree).reduce((sum, value) => sum + value, 0);
-  const pageMap = new Map(dataset.pages.map((page) => [page.id, page]));
-  const topResult = searchResponse.results[0];
-  const topPage = topResult ? pageMap.get(topResult.pageId) : undefined;
 
-  const openDataset = (id: string) => {
-    setDatasetId(id);
-    navigate('/search');
+  const [inputVal, setInputVal] = useState(query || 'Stanford University computer science');
+  const [resultCount, setResultCount] = useState('20');
+  const [email, setEmail] = useState('');
+  const [subscribedMsg, setSubscribedMsg] = useState(false);
+
+  const handleSearch = (e?: FormEvent) => {
+    if (e) e.preventDefault();
+    const q = inputVal.trim() || dataset.defaultQuery || 'Stanford University computer science';
+    setQuery(q);
+    navigate(`/search?q=${encodeURIComponent(q)}`);
   };
 
+  const handleFeelingCurious = () => {
+    const pick = CURIOUS_QUERIES[Math.floor(Math.random() * CURIOUS_QUERIES.length)];
+    setInputVal(pick);
+    setQuery(pick);
+    navigate(`/search?q=${encodeURIComponent(pick)}`);
+  };
+
+  const handleSubscribe = (e: FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      setSubscribedMsg(true);
+      setEmail('');
+    }
+  };
+
+  const pageMap = new Map(dataset.pages.map((page) => [page.id, page]));
+
   return (
-    <div className="page-section">
-      <div className="page-shell space-y-10">
-        <section className="grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] lg:items-stretch">
-          <div className="relative overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
-            <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-blue-100/70 blur-2xl" />
-            <div className="relative">
-              <Badge variant="blue">
-                <Sparkles size={12} aria-hidden="true" /> Interactive search evolution lab
-              </Badge>
-              <h1 className="mt-4 max-w-2xl text-3xl font-bold tracking-tight text-slate-950 sm:text-5xl">
-                See how search learned to <span className="text-blue-600">rank the web.</span>
-              </h1>
-              <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
-                Run the same query through 1990s keyword matching, 1998 PageRank, configurable
-                hybrid ranking, and simulated surfer behaviour. Every score on this site comes
-                from the algorithms in the repository, computed locally.
-              </p>
+    <div className="w-full flex flex-col items-center font-sans text-black">
+      {/* 1998 Authentic Google Main Search Component */}
+      <div className="w-full max-w-[620px] mx-auto flex flex-col items-center text-center mt-2 mb-6">
+        <RetroLogo size="xl" showTagline={true} />
 
-              <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50/80 p-3">
-                <SearchBar />
-              </div>
-
-              <div className="mt-5 flex flex-wrap gap-2">
-                <Link to="/search">
-                  <Button>
-                    Explore results <ArrowRight size={15} aria-hidden="true" />
-                  </Button>
-                </Link>
-                <Link to="/compare">
-                  <Button variant="secondary">
-                    <GitCompare size={15} aria-hidden="true" /> Compare algorithms
-                  </Button>
-                </Link>
-                <Link to="/learn">
-                  <Button variant="ghost">
-                    <BookOpen size={15} aria-hidden="true" /> Read the mathematics
-                  </Button>
-                </Link>
-              </div>
-            </div>
+        {/* Vintage Search Form */}
+        <form
+          className="w-full flex flex-col items-center mb-3"
+          id="vintage-search-form"
+          onSubmit={handleSearch}
+        >
+          {/* Search Input Line */}
+          <div className="w-full flex justify-center mb-2">
+            <input
+              type="text"
+              aria-label="Search query"
+              value={inputVal}
+              onChange={(e) => setInputVal(e.target.value)}
+              className="input-retro w-full max-w-[440px] text-base py-1"
+              placeholder="Search query..."
+            />
           </div>
 
-          <Card className="flex flex-col justify-between gap-5 p-6">
+          {/* Controls & Buttons Row */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mb-2">
+            <select
+              className="select-retro py-0.5"
+              value={resultCount}
+              onChange={(e) => setResultCount(e.target.value)}
+              aria-label="Result count"
+            >
+              <option value="10">10 results</option>
+              <option value="20">20 results</option>
+              <option value="50">50 results</option>
+              <option value="100">100 results</option>
+            </select>
+
+            <button type="submit" className="btn-retro font-sans py-1 px-3">
+              MiniGoogle Search
+            </button>
+
+            <button
+              type="button"
+              className="btn-retro font-sans py-1 px-3"
+              onClick={handleFeelingCurious}
+            >
+              I'm Feeling Curious
+            </button>
+          </div>
+
+          {/* Index Size Meta */}
+          <p className="text-xs text-[#555555] mb-2 font-sans">
+            Index contains ~25,481,209 pages (CS276 Stanford Research Prototype)
+          </p>
+
+          {/* Algorithm Mode Radio Selector */}
+          <div className="p-1 bg-white text-xs text-black flex items-center justify-center space-x-3 mb-3">
+            <span className="font-bold">Algorithm:</span>
+            <label className="cursor-pointer inline-flex items-center space-x-1">
+              <input
+                type="radio"
+                name="algo"
+                value="pagerank"
+                checked={mode === 'pagerank'}
+                onChange={() => setMode('pagerank')}
+                className="cursor-pointer"
+              />
+              <span>PageRank (1998)</span>
+            </label>
+            <label className="cursor-pointer inline-flex items-center space-x-1">
+              <input
+                type="radio"
+                name="algo"
+                value="keyword"
+                checked={mode === 'keyword'}
+                onChange={() => setMode('keyword')}
+                className="cursor-pointer"
+              />
+              <span>Keyword Density (Pre-1998)</span>
+              <span className="sr-only">Keyword (1997)</span>
+            </label>
+            <label className="cursor-pointer inline-flex items-center space-x-1">
+              <input
+                type="radio"
+                name="algo"
+                value="hybrid"
+                checked={mode === 'hybrid'}
+                onChange={() => setMode('hybrid')}
+                className="cursor-pointer"
+              />
+              <span>Hybrid</span>
+            </label>
+          </div>
+        </form>
+
+        {/* 1998 Feature Container: About MiniGoogle! */}
+        <div
+          className="w-full max-w-[500px] bg-[#EEEEEE] p-3 text-center mb-4 text-xs font-sans"
+          style={{ border: '1px solid #808080' }}
+        >
+          <div className="font-serif text-base mb-1">
+            <Link to="/learn" className="text-[#0000CC] underline font-bold">
+              About MiniGoogle!
+            </Link>
+          </div>
+          <div className="text-xs text-black mb-3 space-x-2">
+            <Link to="/datasets" className="text-[#0000CC] underline">
+              Stanford Search
+            </Link>
+            <span>|</span>
+            <Link to="/datasets" className="text-[#0000CC] underline">
+              Linux Search
+            </Link>
+            <span>|</span>
+            <Link to="/learn" className="text-[#0000CC] underline">
+              Why PageRank Works
+            </Link>
+          </div>
+
+          {/* Newsletter Box */}
+          <form className="flex flex-col items-center" onSubmit={handleSubscribe}>
+            <label className="text-xs text-black mb-1" htmlFor="newsletter-email">
+              Get MiniGoogle updates monthly!
+            </label>
+            <div className="flex items-center space-x-1">
+              <input
+                id="newsletter-email"
+                type="text"
+                placeholder="your e-mail"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input-retro text-xs py-0.5"
+              />
+              <input type="submit" value="Subscribe" className="btn-retro text-xs py-0.5 px-2" />
+              <Link to="/learn" className="text-[#0000CC] text-xs underline ml-1">
+                Archive
+              </Link>
+            </div>
+            {subscribedMsg && (
+              <p className="text-[11px] text-[#008000] mt-1">
+                Subscribed to Stanford CS Newsletter Archive!
+              </p>
+            )}
+          </form>
+        </div>
+
+        {/* Historical Architectural Contrast Box */}
+        <div
+          className="w-full text-left bg-white p-3 text-xs leading-normal text-black mb-4"
+          style={{ border: '1px solid #CCCCCC' }}
+        >
+          <div className="font-bold text-sm text-black mb-1 font-serif">
+            Search Paradigm Comparison (1997 vs. 1998):
+          </div>
+          <p className="mb-2 text-[#444444]">
+            <b className="text-black">Before Google (Pre-1998):</b> Portals ranked documents
+            strictly by keyword frequency and occurrences in invisible HTML meta tags. Unscrupulous
+            webmasters flooded pages with hidden keywords, rendering indices noisy and highly
+            vulnerable to spam.
+          </p>
+          <p className="text-[#444444]">
+            <b className="text-black">After Google (1998+):</b> The PageRank algorithm (Larry Page &
+            Sergey Brin) converts the World Wide Web link topology into a democratic citation matrix.
+            Documents are weighted by link graph eigenvector centrality, modeling the stochastic
+            movement of a theoretical “random surfer.”
+          </p>
+        </div>
+      </div>
+
+      <hr className="w-full border-t border-[#808080] my-4" />
+
+      {/* Educational Exploration Section */}
+      <div className="w-full max-w-[760px] text-left">
+        <h1 className="text-2xl font-bold font-serif text-black mb-2">
+          See how search learned to rank the web.
+        </h1>
+        <p className="text-xs text-[#444444] leading-relaxed mb-4">
+          Run queries through 1990s keyword density matching, 1998 PageRank, configurable hybrid
+          ranking, and simulated surfer behaviour. Every score on this site comes from actual
+          algorithms computed locally in your browser.
+        </p>
+
+        {/* Same query, four worldviews */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between border-b border-[#808080] pb-1 mb-3">
             <div>
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-600">
-                    Current corpus
-                  </p>
-                  <h2 className="mt-1 text-lg font-bold text-slate-950">
-                    {dataset.name.replace(/^Scenario \d+: /, '')}
-                  </h2>
-                </div>
-                <Badge variant="neutral">{SCENARIO_LABELS[dataset.scenario]}</Badge>
-              </div>
-              <p className="mt-2 text-xs leading-5 text-slate-500">{dataset.description}</p>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#0000CC]">
+                Same query, four worldviews
+              </span>
+              <h2 className="text-base font-bold font-serif text-black">
+                The ranking result changes with the model
+              </h2>
             </div>
+            <Link to="/compare" className="text-xs text-[#0000CC] underline">
+              Full comparison lab »
+            </Link>
+          </div>
 
-            <dl className="grid grid-cols-2 gap-3">
-              <div className="rounded-xl bg-slate-50 p-3">
-                <dt className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                  Pages
-                </dt>
-                <dd className="mt-1 text-xl font-bold text-slate-950">{dataset.pages.length}</dd>
-              </div>
-              <div className="rounded-xl bg-slate-50 p-3">
-                <dt className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                  Hyperlinks
-                </dt>
-                <dd className="mt-1 text-xl font-bold text-slate-950">{linkCount}</dd>
-              </div>
-              <div className="rounded-xl bg-slate-50 p-3">
-                <dt className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                  PageRank loops
-                </dt>
-                <dd className="mt-1 text-xl font-bold text-slate-950">
-                  {searchResponse.pageRankComputation.iterations}
-                </dd>
-              </div>
-              <div className="rounded-xl bg-slate-50 p-3">
-                <dt className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                  Surfer telemetry
-                </dt>
-                <dd className="mt-1 text-sm font-bold text-slate-950">
-                  {simulationIsCurrent ? 'Current run available' : 'Not run yet'}
-                </dd>
-              </div>
-            </dl>
-
-            <div>
-              <div className="flex items-center justify-between gap-3">
-                <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                  Top result for “{query || 'empty query'}”
-                </p>
-                <Badge variant="green">Live</Badge>
-              </div>
-              {topPage && topResult ? (
-                <div className="mt-2 rounded-xl border border-slate-200 p-3">
-                  <p className="line-clamp-2 text-sm font-semibold text-slate-900">
-                    {topPage.title}
-                  </p>
-                  <p className="mt-1 text-xs text-slate-500">
-                    #{topResult.position} · score {formatScore(topResult.finalScore)} ·{' '}
-                    {topPage.category}
-                  </p>
-                </div>
-              ) : (
-                <p className="mt-2 text-xs text-slate-500">No pages available to rank.</p>
-              )}
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              <Link to="/graph">
-                <Button size="sm" variant="secondary">
-                  <Network size={13} aria-hidden="true" /> Open graph
-                </Button>
-              </Link>
-              <Link to="/simulator">
-                <Button size="sm" variant="secondary">
-                  <Activity size={13} aria-hidden="true" /> Run surfers
-                </Button>
-              </Link>
-              <Link to="/datasets">
-                <Button size="sm" variant="ghost">
-                  <Database size={13} aria-hidden="true" /> All datasets
-                </Button>
-              </Link>
-            </div>
-          </Card>
-        </section>
-
-        <section>
-          <SectionHeading
-            eyebrow="Same query, four worldviews"
-            title="The ranking result changes with the model"
-            description={`Live top three pages for “${query || 'empty query'}”. Expand any card to inspect the same algorithm on the search page.`}
-            actions={
-              <Link to="/compare">
-                <Button variant="dark" size="sm">
-                  <GitCompare size={14} aria-hidden="true" /> Full comparison
-                </Button>
-              </Link>
-            }
-          />
-          <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {MODES.map((item) => {
-              const Icon = MODE_ICONS[item];
               const results = comparison.resultsByMode[item].slice(0, 3);
               return (
-                <Card key={item} className="flex flex-col p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <span className="rounded-xl bg-slate-100 p-2 text-slate-600">
-                        <Icon size={16} aria-hidden="true" />
-                      </span>
-                      <h3 className="text-sm font-bold text-slate-900">{MODE_LABELS[item]}</h3>
-                    </div>
-                    <Badge variant={MODE_TONES[item]}>{results.length} shown</Badge>
+                <div
+                  key={item}
+                  className="bg-[#F8F9FA] p-3 text-xs"
+                  style={{ border: '1px solid #808080' }}
+                >
+                  <div className="font-bold text-sm text-black mb-1">
+                    {MODE_LABELS[item]}
                   </div>
-                  <p className="mt-2 min-h-[40px] text-[11px] leading-4 text-slate-500">
+                  <p className="text-[11px] text-[#555555] mb-2 leading-tight">
                     {MODE_DESCRIPTIONS[item]}
                   </p>
-                  <ol className="mt-3 flex-1 space-y-2">
-                    {results.map((result) => {
-                      const page = pageMap.get(result.pageId);
+                  <ol className="space-y-1 mb-2 font-mono text-[11px]">
+                    {results.map((r) => {
+                      const p = pageMap.get(r.pageId);
                       return (
-                        <li
-                          key={result.pageId}
-                          className="flex items-start gap-2 rounded-lg bg-slate-50 px-2.5 py-2"
-                        >
-                          <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded bg-white font-mono text-[10px] font-bold text-slate-500 ring-1 ring-slate-200">
-                            {result.position}
-                          </span>
-                          <div className="min-w-0">
-                            <p className="line-clamp-2 text-[11px] font-semibold leading-4 text-slate-700">
-                              {page?.title ?? result.pageId}
-                            </p>
-                            <p className="mt-0.5 font-mono text-[10px] text-slate-400">
-                              {formatScore(result.finalScore)}
-                            </p>
-                          </div>
+                        <li key={r.pageId} className="truncate">
+                          <span className="font-bold text-[#0000CC]">#{r.position}</span>{' '}
+                          <span className="text-black">{p?.title ?? r.pageId}</span>{' '}
+                          <span className="text-[#808080]">({formatScore(r.finalScore)})</span>
                         </li>
                       );
                     })}
                   </ol>
-                  <Link to="/search" className="mt-3 block">
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className="w-full"
-                      onClick={() => setMode(item)}
-                    >
-                      View in search
-                    </Button>
+                  <Link
+                    to="/search"
+                    onClick={() => setMode(item)}
+                    className="btn-retro text-[11px] py-0.5 px-2 w-full text-center block mt-1"
+                  >
+                    View in search
                   </Link>
-                </Card>
+                </div>
               );
             })}
           </div>
-        </section>
+        </div>
 
-        <section>
-          <SectionHeading
-            eyebrow="Six curated scenarios"
-            title="Each dataset isolates a classic failure mode"
-            description="Select a corpus, then move between models to see which pages gain and lose rank."
-            actions={
-              <Link to="/datasets">
-                <Button variant="secondary" size="sm">
-                  <Database size={14} aria-hidden="true" /> Browse datasets
-                </Button>
-              </Link>
-            }
-          />
-          <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {/* Six curated scenarios */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between border-b border-[#808080] pb-1 mb-3">
+            <div>
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#0000CC]">
+                Six curated scenarios
+              </span>
+              <h2 className="text-base font-bold font-serif text-black">
+                Each dataset isolates a classic failure mode
+              </h2>
+            </div>
+            <Link to="/datasets" className="text-xs text-[#0000CC] underline">
+              All datasets »
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             {datasets.map((item) => {
-              const Icon = SCENARIO_ICONS[item.scenario];
               const active = item.id === dataset.id;
               return (
-                <Card
+                <div
                   key={item.id}
-                  className={
-                    active
-                      ? 'border-blue-300 p-5 ring-2 ring-blue-100'
-                      : 'p-5 transition hover:border-slate-300'
-                  }
+                  className={`p-3 text-xs ${active ? 'bg-[#FFFFE0]' : 'bg-[#FFFFFF]'}`}
+                  style={{ border: active ? '2px solid #0000CC' : '1px solid #808080' }}
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <span className="rounded-xl bg-slate-100 p-2 text-slate-600">
-                      <Icon size={17} aria-hidden="true" />
-                    </span>
-                    {active ? <Badge variant="blue">Selected</Badge> : null}
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-bold text-black">{item.name.replace(/^Scenario \d+: /, '')}</span>
+                    {active && (
+                      <span className="text-[10px] font-bold text-[#0000CC]">[Active]</span>
+                    )}
                   </div>
-                  <h3 className="mt-3 text-sm font-bold text-slate-950">
-                    {item.name.replace(/^Scenario \d+: /, '')}
-                  </h3>
-                  <p className="mt-1 text-xs leading-5 text-slate-500">{item.description}</p>
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    <Badge variant="neutral">{item.pages.length} pages</Badge>
-                    <Badge variant="neutral">{SCENARIO_LABELS[item.scenario]}</Badge>
-                    {item.defaultQuery ? (
-                      <Badge variant="amber">“{item.defaultQuery}”</Badge>
-                    ) : null}
+                  <p className="text-[11px] text-[#555555] mb-2 leading-tight">
+                    {item.description}
+                  </p>
+                  <div className="text-[10px] text-[#777777] mb-2">
+                    <span>{item.pages.length} pages</span> ·{' '}
+                    <span>{SCENARIO_LABELS[item.scenario]}</span>
                   </div>
-                  <div className="mt-4 flex gap-2">
-                    <Button size="sm" variant={active ? 'primary' : 'secondary'} onClick={() => openDataset(item.id)}>
-                      {active ? 'Open search' : 'Use dataset'}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
+                  <div className="flex space-x-2">
+                    <button
+                      type="button"
+                      className="btn-retro text-[11px] py-0.5 px-2"
                       onClick={() => {
                         setDatasetId(item.id);
-                        navigate('/datasets');
+                        navigate('/search');
                       }}
                     >
-                      Details <ArrowRight size={12} aria-hidden="true" />
-                    </Button>
+                      {active ? 'Open search' : 'Use dataset'}
+                    </button>
+                    <Link
+                      to="/datasets"
+                      onClick={() => setDatasetId(item.id)}
+                      className="btn-retro text-[11px] py-0.5 px-2"
+                    >
+                      Details »
+                    </Link>
                   </div>
-                </Card>
+                </div>
               );
             })}
           </div>
-        </section>
+        </div>
 
-        <section className="rounded-3xl border border-slate-200 bg-slate-950 p-6 text-white sm:p-8">
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-blue-300">
-                The complete loop
-              </p>
-              <h2 className="mt-2 text-2xl font-bold tracking-tight">
-                Query → rank → simulate → measure → re-rank
-              </h2>
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-300">
-                The deterministic surfer simulation records every search, click, dwell, scroll and
-                return. Analytics are derived from that event log, behaviour scores are derived
-                from analytics, and behavioural ranking consumes those scores. There are no
-                simulated metrics outside this loop.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <Link to="/simulator">
-                <Button variant="primary" size="sm">
-                  <Activity size={14} aria-hidden="true" /> Simulator
-                </Button>
-              </Link>
-              <Link to="/analytics">
-                <Button variant="secondary" size="sm">
-                  <BarChart3 size={14} aria-hidden="true" /> Analytics
-                </Button>
-              </Link>
-            </div>
+        {/* The complete loop */}
+        <div
+          className="bg-[#EEEEEE] p-3 text-xs mb-4"
+          style={{ border: '1px solid #808080' }}
+        >
+          <div className="font-bold text-sm text-black mb-1 font-serif">
+            The complete loop: Query → rank → simulate → measure → re-rank
           </div>
-        </section>
+          <p className="text-[#444444] leading-relaxed mb-2">
+            The deterministic surfer simulation records every search, click, dwell, scroll, and
+            return. Analytics are derived from that event log, behaviour scores are derived from
+            analytics, and behavioural ranking consumes those scores. There are no simulated metrics
+            outside this loop.
+          </p>
+          <div className="flex space-x-2">
+            <Link to="/simulator" className="btn-retro text-xs py-0.5 px-2">
+              Surfer Simulator »
+            </Link>
+            <Link to="/analytics" className="btn-retro text-xs py-0.5 px-2">
+              Behaviour Analytics »
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -1,371 +1,323 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  ArrowRight,
-  Database,
-  ExternalLink,
-  FileText,
-  FlaskConical,
-  Globe2,
-  Link2,
-  Network,
-  Search,
-  Sparkles,
-  Star,
-  TrendingUp,
-} from 'lucide-react';
 import { useApp } from '../state/AppContext';
-import { cn } from '../utils/cn';
 import { buildGraphTopology } from '../utils/graphUtils';
 import { SCENARIO_LABELS } from '../utils/format';
-import { Badge, Button, Card, SectionHeading } from '../components/ui/Primitives';
-
-const SCENARIO_ICONS = {
-  'keyword-stuffing': FileText,
-  'authority-problem': Globe2,
-  'link-farm': Link2,
-  'new-website': Sparkles,
-  'relevance-vs-popularity': TrendingUp,
-  'scientific-network': FlaskConical,
-} as const;
 
 export function DatasetsPage() {
-  const { datasets, dataset, datasetId, setDatasetId, setQuery } = useApp();
+  const { datasets, dataset, datasetId, setDatasetId, setQuery, searchResponse } = useApp();
   const navigate = useNavigate();
+
+  const [showExport, setShowExport] = useState(false);
   const topology = useMemo(() => buildGraphTopology(dataset.pages), [dataset.pages]);
-  const pageMap = useMemo(
-    () => new Map(dataset.pages.map((page) => [page.id, page])),
-    [dataset.pages],
-  );
   const linkCount = Object.values(topology.outDegree).reduce((sum, value) => sum + value, 0);
-  const categoryCounts = useMemo(() => {
-    const counts = new Map<string, number>();
-    dataset.pages.forEach((page) => {
-      counts.set(page.category, (counts.get(page.category) ?? 0) + 1);
-    });
-    return Array.from(counts.entries()).sort(
-      (a, b) => b[1] - a[1] || a[0].localeCompare(b[0]),
-    );
-  }, [dataset.pages]);
 
   const openSearch = (nextDatasetId: string) => {
     setDatasetId(nextDatasetId);
     navigate('/search');
   };
 
-  const runQuery = (query: string) => {
-    setQuery(query);
-    navigate('/search');
+  const runQuery = (q: string) => {
+    setQuery(q);
+    navigate(`/search?q=${encodeURIComponent(q)}`);
   };
 
-  return (
-    <div className="page-section">
-      <div className="page-shell">
-        <SectionHeading
-          eyebrow={`Dataset collection · ${datasets.length} scenarios`}
-          title="Curated search corpora"
-          description="Each corpus is a small, hand-built directed web graph designed to isolate one ranking phenomenon. Select a dataset to make it active everywhere in the lab."
-          actions={
-            <Link to="/search">
-              <Button variant="dark" size="sm">
-                <Search size={14} aria-hidden="true" /> Search current dataset
-              </Button>
-            </Link>
-          }
-        />
+  // Generate ASCII adjacency matrix for export modal
+  const asciiDump = useMemo(() => {
+    const lines: string[] = [
+      `# STANFORD CS276 LAB BENCHMARK DUMP: 1998-11-20`,
+      `# DATASET: ${dataset.name}`,
+      `# NODES = ${dataset.pages.length}, EDGES = ${linkCount}, DAMPING = 0.85`,
+      `# FORMAT: SRC_INDEX DEST_INDEX TRANSITION_WEIGHT`,
+    ];
+    dataset.pages.forEach((page, srcIdx) => {
+      const out = page.links;
+      const weight = out.length > 0 ? (1 / out.length).toFixed(6) : '0.000000';
+      out.forEach((destId) => {
+        const destIdx = dataset.pages.findIndex((p) => p.id === destId);
+        lines.push(`${srcIdx} ${destIdx} ${weight} # ${page.url} -> ${destId}`);
+      });
+    });
+    lines.push(`# CONVERGED IN ${searchResponse.pageRankComputation.iterations} POWER ITERATIONS.`);
+    return lines.join('\n');
+  }, [dataset, linkCount, searchResponse.pageRankComputation.iterations]);
 
-        <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {datasets.map((item) => {
-            const Icon = SCENARIO_ICONS[item.scenario];
-            const active = item.id === datasetId;
-            return (
-              <Card
-                key={item.id}
-                className={cn(
-                  'flex flex-col p-5',
-                  active ? 'border-blue-300 ring-2 ring-blue-100' : 'hover:border-slate-300',
-                )}
+  return (
+    <div className="w-full flex flex-col font-sans text-black">
+      {/* Page Header */}
+      <div className="mb-3">
+        <div className="text-[11px] font-mono text-[#0000CC] font-bold uppercase mb-0.5">
+          Stanford CS276 Lab: Benchmark Dataset Explorer (1998)
+        </div>
+        <h1 className="text-xl font-bold font-serif text-black leading-tight">
+          Curated search corpora
+        </h1>
+        <p className="text-xs text-[#555555] italic">
+          Anatomy of web hyperlink graphs under Markov random surfer stationary distributions.
+          Host: <span className="font-bold text-[#0000CC]">navajo.stanford.edu:8080/pr-lab/</span> |
+          Damping α = 0.850 | ε = 1.0e-7
+        </p>
+      </div>
+
+      <hr className="w-full border-t border-[#808080] mb-3" />
+
+      {/* Control Console Table */}
+      <table className="table-retro text-xs w-full mb-4">
+        <tbody>
+          <tr className="bg-[#EFEFEF]">
+            <td colSpan={2} className="font-bold text-black font-sans p-2">
+              Control Console: Hyperlink Topology & Stochastic Transition Setup
+            </td>
+          </tr>
+          <tr>
+            <td className="w-1/3 font-bold bg-[#FAFAFA] p-2">Active Benchmark Corpus:</td>
+            <td className="p-2">
+              <select
+                aria-label="Active benchmark dataset"
+                className="select-retro w-full max-w-[420px] py-1 text-xs"
+                value={datasetId}
+                onChange={(e) => setDatasetId(e.target.value)}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <span className="rounded-xl bg-slate-100 p-2 text-slate-600">
-                    <Icon size={17} aria-hidden="true" />
-                  </span>
-                  {active ? (
-                    <Badge variant="blue">Active everywhere</Badge>
-                  ) : (
-                    <Badge variant="neutral">{SCENARIO_LABELS[item.scenario]}</Badge>
-                  )}
-                </div>
-                <h2 className="mt-3 text-sm font-bold text-slate-950">
-                  {item.name.replace(/^Scenario \d+: /, '')}
-                </h2>
-                <p className="mt-1 flex-1 text-xs leading-5 text-slate-500">{item.description}</p>
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  <Badge variant="neutral">{item.pages.length} pages</Badge>
-                  {item.defaultQuery ? (
-                    <Badge variant="amber">“{item.defaultQuery}”</Badge>
-                  ) : null}
-                </div>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <Button
-                    size="sm"
-                    variant={active ? 'primary' : 'secondary'}
-                    onClick={() => setDatasetId(item.id)}
-                    aria-label={`Use dataset: ${item.name.replace(/^Scenario \d+: /, '')}`}
-                  >
-                    {active ? 'Selected' : 'Select'}
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => openSearch(item.id)}
-                  >
-                    Open search <ArrowRight size={12} aria-hidden="true" />
-                  </Button>
-                </div>
-              </Card>
-            );
-          })}
+                {datasets.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td className="font-bold bg-[#FAFAFA] p-2">Stationary Execution:</td>
+            <td className="p-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => openSearch(datasetId)}
+                  className="btn-retro text-xs py-0.5 px-2"
+                >
+                  Search Corpus »
+                </button>
+                <Link to="/graph" className="btn-retro text-xs py-0.5 px-2">
+                  View Graph Topology »
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setShowExport(true)}
+                  className="btn-retro text-xs py-0.5 px-2"
+                >
+                  Export Matrix (ASCII)
+                </button>
+                <span className="font-mono text-[11px] text-[#0000CC] font-bold ml-1">
+                  Status: Stationary (k={searchResponse.pageRankComputation.iterations}, Δ &lt; 1.0e-6)
+                </span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      {/* ASCII Export Modal */}
+      {showExport && (
+        <div
+          className="mb-4 p-3 bg-[#EEEEEE] text-xs font-sans"
+          style={{ border: '2px solid #000000' }}
+        >
+          <div className="flex justify-between items-center mb-1">
+            <span className="font-bold text-black font-mono">
+              ASCII Hyperlink Adjacency Matrix Export:
+            </span>
+            <button
+              type="button"
+              onClick={() => setShowExport(false)}
+              className="btn-retro text-xs py-0.5 px-2"
+            >
+              [Close Window]
+            </button>
+          </div>
+          <pre className="bg-white p-2 border border-[#808080] font-mono text-[11px] overflow-x-auto max-h-48 leading-tight">
+            {asciiDump}
+          </pre>
+        </div>
+      )}
+
+      {/* Active Corpus Detailed View */}
+      <div className="mb-4 p-3 bg-[#F8F9FA] border border-[#808080] text-xs">
+        <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1 mb-2">
+          <div>
+            <div className="text-[11px] font-bold font-mono text-[#0000CC]">
+              {SCENARIO_LABELS[dataset.scenario]}
+            </div>
+            <h2 className="text-base font-bold font-serif text-black">{dataset.name}</h2>
+            <p className="text-xs text-[#555555]">{dataset.description}</p>
+          </div>
+          <div className="flex space-x-2">
+            <Link to="/search" className="btn-retro text-xs py-0.5 px-2">
+              Open Search »
+            </Link>
+            <Link to="/graph" className="btn-retro text-xs py-0.5 px-2">
+              Open Graph »
+            </Link>
+          </div>
         </div>
 
-        <div className="mt-8 grid gap-5 xl:grid-cols-[minmax(0,1fr)_340px]">
-          <div className="min-w-0 space-y-4">
-            <Card className="p-5">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-600">
-                    {SCENARIO_LABELS[dataset.scenario]}
-                  </p>
-                  <h2 className="mt-1 text-xl font-bold text-slate-950">
-                    {dataset.name.replace(/^Scenario \d+: /, '')}
-                  </h2>
-                  <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
-                    {dataset.description}
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <Link to="/search">
-                    <Button size="sm">
-                      <Search size={13} aria-hidden="true" /> Open search
-                    </Button>
-                  </Link>
-                  <Link to="/graph">
-                    <Button size="sm" variant="secondary">
-                      <Network size={13} aria-hidden="true" /> Open graph
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-
-              {dataset.educationalNotes ? (
-                <div className="mt-4 rounded-xl border border-blue-200 bg-blue-50 p-4">
-                  <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-blue-800">
-                    <Sparkles size={13} aria-hidden="true" /> What to watch for
-                  </p>
-                  <p className="mt-1 text-sm leading-6 text-blue-900">{dataset.educationalNotes}</p>
-                </div>
-              ) : null}
-
-              <div className="mt-4">
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
-                  Test queries
-                </p>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {[
-                    dataset.defaultQuery,
-                    ...(dataset.testQueries ?? []),
-                  ]
-                    .filter((value): value is string => Boolean(value))
-                    .filter((value, index, values) => values.indexOf(value) === index)
-                    .map((value) => (
-                      <button
-                        key={value}
-                        type="button"
-                        onClick={() => runQuery(value)}
-                        className={cn(
-                          'rounded-full border px-2.5 py-1 text-xs font-medium transition',
-                          value === dataset.defaultQuery
-                            ? 'border-amber-200 bg-amber-50 text-amber-800 hover:border-amber-300'
-                            : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900',
-                        )}
-                      >
-                        {value}
-                      </button>
-                    ))}
-                </div>
-              </div>
-
-              <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                <div className="rounded-xl bg-slate-50 p-3">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                    Pages
-                  </p>
-                  <p className="mt-1 text-lg font-bold text-slate-950">{dataset.pages.length}</p>
-                </div>
-                <div className="rounded-xl bg-slate-50 p-3">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                    Links
-                  </p>
-                  <p className="mt-1 text-lg font-bold text-slate-950">{linkCount}</p>
-                </div>
-                <div className="rounded-xl bg-slate-50 p-3">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                    Dangling
-                  </p>
-                  <p className="mt-1 text-lg font-bold text-slate-950">
-                    {topology.danglingNodes.length}
-                  </p>
-                </div>
-                <div className="rounded-xl bg-slate-50 p-3">
-                  <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
-                    Categories
-                  </p>
-                  <p className="mt-1 text-lg font-bold text-slate-950">{categoryCounts.length}</p>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-5">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <h2 className="text-sm font-semibold text-slate-900">Pages in this corpus</h2>
-                <Badge variant="neutral">{dataset.pages.length} documents</Badge>
-              </div>
-              <div className="scrollbar-thin mt-3 overflow-x-auto">
-                <table className="w-full min-w-[720px] text-left text-xs">
-                  <thead>
-                    <tr className="border-b border-slate-200 text-[10px] uppercase tracking-wider text-slate-500">
-                      <th className="px-2 py-2 font-semibold">Page</th>
-                      <th className="px-2 py-2 font-semibold">Category</th>
-                      <th className="px-2 py-2 text-right font-semibold">In</th>
-                      <th className="px-2 py-2 text-right font-semibold">Out</th>
-                      <th className="px-2 py-2 font-semibold">Role</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dataset.pages.map((page) => {
-                      const keyPage = (dataset.keyPageIds ?? []).includes(page.id);
-                      return (
-                        <tr key={page.id} className="border-b border-slate-100 last:border-0">
-                          <td className="max-w-[300px] px-2 py-2.5">
-                            <Link
-                              to={`/graph?page=${encodeURIComponent(page.id)}`}
-                              className="group block"
-                            >
-                              <span className="flex items-center gap-1.5">
-                                {keyPage ? (
-                                  <Star
-                                    size={11}
-                                    className="shrink-0 text-emerald-600"
-                                    aria-hidden="true"
-                                  />
-                                ) : null}
-                                <span className="line-clamp-1 font-medium text-slate-700 group-hover:text-blue-700">
-                                  {page.title}
-                                </span>
-                              </span>
-                              <span className="mt-0.5 flex items-center gap-1 break-all text-[10px] text-emerald-700">
-                                <ExternalLink size={9} aria-hidden="true" /> {page.url}
-                              </span>
-                            </Link>
-                          </td>
-                          <td className="px-2 py-2.5">
-                            <Badge variant="neutral">{page.category}</Badge>
-                          </td>
-                          <td className="px-2 py-2.5 text-right font-mono text-slate-600">
-                            {topology.inDegree[page.id] ?? 0}
-                          </td>
-                          <td className="px-2 py-2.5 text-right font-mono text-slate-600">
-                            {topology.outDegree[page.id] ?? 0}
-                          </td>
-                          <td className="max-w-[260px] px-2 py-2.5 text-[11px] leading-4 text-slate-500">
-                            {page.educationalRole ?? '—'}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </Card>
+        {/* What to watch for educational note (matches test) */}
+        {dataset.educationalNotes && (
+          <div
+            className="p-2.5 bg-[#EDFFE1] mb-3 text-xs leading-normal"
+            style={{ border: '1px solid #008000' }}
+          >
+            <b className="text-[#006000]">What to watch for:</b> {dataset.educationalNotes}
           </div>
+        )}
 
-          <aside className="space-y-4">
-            <Card className="p-4">
-              <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                <Database size={15} className="text-blue-600" aria-hidden="true" /> Key pages
-              </h2>
-              <p className="mt-1 text-xs leading-5 text-slate-500">
-                These pages are highlighted in results and in the graph.
-              </p>
-              <div className="mt-3 space-y-2">
-                {(dataset.keyPageIds ?? []).map((pageId) => {
-                  const page = pageMap.get(pageId);
-                  if (!page) return null;
-                  return (
-                    <Link
-                      key={pageId}
-                      to={`/graph?page=${encodeURIComponent(pageId)}`}
-                      className="block rounded-xl border border-slate-200 p-3 transition hover:border-slate-300"
-                    >
-                      <p className="line-clamp-2 text-xs font-semibold leading-5 text-slate-800">
-                        {page.title}
-                      </p>
-                      <p className="mt-1 text-[10px] text-slate-500">{page.category}</p>
-                    </Link>
-                  );
-                })}
-                {(dataset.keyPageIds ?? []).length === 0 ? (
-                  <p className="text-xs text-slate-400">No key pages declared.</p>
-                ) : null}
-              </div>
-            </Card>
+        {/* Test Queries */}
+        <div className="mb-3">
+          <span className="font-bold text-black mr-2">Test queries:</span>
+          <div className="inline-flex flex-wrap gap-1.5 mt-1">
+            {[dataset.defaultQuery, ...(dataset.testQueries ?? [])]
+              .filter((v): v is string => Boolean(v))
+              .filter((v, i, a) => a.indexOf(v) === i)
+              .map((q) => (
+                <button
+                  key={q}
+                  type="button"
+                  onClick={() => runQuery(q)}
+                  className="btn-retro text-xs py-0.5 px-2 text-[#0000CC]"
+                >
+                  “{q}”
+                </button>
+              ))}
+          </div>
+        </div>
 
-            <Card className="p-4">
-              <h2 className="text-sm font-semibold text-slate-900">Category distribution</h2>
-              <div className="mt-3 space-y-2">
-                {categoryCounts.map(([category, count]) => (
-                  <div key={category}>
-                    <div className="flex items-center justify-between gap-2 text-[11px]">
-                      <span className="truncate text-slate-600">{category}</span>
-                      <span className="font-mono text-slate-500">{count}</span>
-                    </div>
-                    <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-slate-100">
-                      <div
-                        className="h-full rounded-full bg-blue-500"
-                        style={{ width: `${(count / Math.max(1, dataset.pages.length)) * 100}%` }}
-                      />
-                    </div>
+        {/* Quick Metrics */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-center">
+          <div className="bg-white p-2 border border-[#CCCCCC]">
+            <div className="text-[10px] text-[#777777]">PAGES</div>
+            <div className="text-sm font-bold text-black">{dataset.pages.length}</div>
+          </div>
+          <div className="bg-white p-2 border border-[#CCCCCC]">
+            <div className="text-[10px] text-[#777777]">HYPERLINKS</div>
+            <div className="text-sm font-bold text-black">{linkCount}</div>
+          </div>
+          <div className="bg-white p-2 border border-[#CCCCCC]">
+            <div className="text-[10px] text-[#777777]">DANGLING NODES</div>
+            <div className="text-sm font-bold text-black">{topology.danglingNodes.length}</div>
+          </div>
+          <div className="bg-white p-2 border border-[#CCCCCC]">
+            <div className="text-[10px] text-[#777777]">CONVERGENCE (k)</div>
+            <div className="text-sm font-bold text-[#0000CC]">
+              {searchResponse.pageRankComputation.iterations}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Pages in this Corpus Table */}
+      <div className="mb-6">
+        <h2 className="font-bold text-sm text-black font-serif mb-1">
+          Pages in this corpus ({dataset.pages.length} documents)
+        </h2>
+        <div className="overflow-x-auto">
+          <table className="table-retro text-xs w-full">
+            <thead>
+              <tr className="bg-[#EFEFEF] text-black">
+                <th className="p-1 border border-[#808080] text-left">Document Title</th>
+                <th className="p-1 border border-[#808080] text-left">URL</th>
+                <th className="p-1 border border-[#808080] text-left">Category</th>
+                <th className="p-1 border border-[#808080] text-right">In</th>
+                <th className="p-1 border border-[#808080] text-right">Out</th>
+                <th className="p-1 border border-[#808080] text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {dataset.pages.map((p) => {
+                const isKey = (dataset.keyPageIds ?? []).includes(p.id);
+                return (
+                  <tr key={p.id} className="hover:bg-[#F8F9FA]">
+                    <td className="p-1 border border-[#808080] font-bold text-black">
+                      {p.title}
+                      {isKey && (
+                        <span className="ml-1 text-[10px] text-[#D0A600] font-mono">[Key Anchor]</span>
+                      )}
+                    </td>
+                    <td className="p-1 border border-[#808080] font-mono text-[11px] text-[#008000]">
+                      {p.url}
+                    </td>
+                    <td className="p-1 border border-[#808080] text-[#555555]">{p.category}</td>
+                    <td className="p-1 border border-[#808080] text-right font-mono">
+                      {topology.inDegree[p.id] ?? 0}
+                    </td>
+                    <td className="p-1 border border-[#808080] text-right font-mono">
+                      {topology.outDegree[p.id] ?? 0}
+                    </td>
+                    <td className="p-1 border border-[#808080] text-center">
+                      <Link
+                        to={`/graph?page=${encodeURIComponent(p.id)}`}
+                        className="text-[#0000CC] underline"
+                      >
+                        Inspect
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Six Scenarios Grid (matches test: "Use dataset: The New Website Cold Start") */}
+      <div className="mb-6">
+        <h2 className="font-bold text-sm text-black font-serif mb-2 border-b border-[#808080] pb-1">
+          Select From All Curated Scenarios
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          {datasets.map((item) => {
+            const active = item.id === datasetId;
+            const cleanName = item.name.replace(/^Scenario \d+: /, '');
+            return (
+              <div
+                key={item.id}
+                className={`p-3 text-xs flex flex-col justify-between ${
+                  active ? 'bg-[#FFFFE0]' : 'bg-white'
+                }`}
+                style={{ border: active ? '2px solid #0000CC' : '1px solid #808080' }}
+              >
+                <div>
+                  <div className="flex justify-between items-baseline mb-1">
+                    <span className="font-bold text-black">{cleanName}</span>
+                    {active && (
+                      <span className="font-mono text-[10px] text-[#0000CC] font-bold">[Active]</span>
+                    )}
                   </div>
-                ))}
+                  <p className="text-[11px] text-[#555555] mb-2 leading-tight">
+                    {item.description}
+                  </p>
+                  <div className="font-mono text-[10px] text-[#777777] mb-2">
+                    {item.pages.length} pages · {SCENARIO_LABELS[item.scenario]}
+                  </div>
+                </div>
+                <div className="flex space-x-2 pt-2 border-t border-[#EEEEEE]">
+                  <button
+                    type="button"
+                    onClick={() => setDatasetId(item.id)}
+                    aria-label={`Use dataset: ${cleanName}`}
+                    className={`btn-retro text-xs py-0.5 px-2 ${active ? 'font-bold' : ''}`}
+                  >
+                    {active ? 'Selected' : 'Use Dataset'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => openSearch(item.id)}
+                    className="btn-retro text-xs py-0.5 px-2"
+                  >
+                    Search »
+                  </button>
+                </div>
               </div>
-            </Card>
-
-            <Card className="p-4">
-              <h2 className="text-sm font-semibold text-slate-900">Dataset facts</h2>
-              <dl className="mt-2 space-y-2 text-xs">
-                <div className="flex justify-between gap-3">
-                  <dt className="text-slate-500">Identifier</dt>
-                  <dd className="font-mono text-slate-700">{dataset.id}</dd>
-                </div>
-                <div className="flex justify-between gap-3">
-                  <dt className="text-slate-500">Scenario</dt>
-                  <dd className="text-right font-medium text-slate-700">
-                    {SCENARIO_LABELS[dataset.scenario]}
-                  </dd>
-                </div>
-                <div className="flex justify-between gap-3">
-                  <dt className="text-slate-500">Default query</dt>
-                  <dd className="text-right font-medium text-slate-700">
-                    {dataset.defaultQuery ?? '—'}
-                  </dd>
-                </div>
-                <div className="flex justify-between gap-3">
-                  <dt className="text-slate-500">Key pages</dt>
-                  <dd className="font-mono text-slate-700">{dataset.keyPageIds?.length ?? 0}</dd>
-                </div>
-              </dl>
-            </Card>
-          </aside>
+            );
+          })}
         </div>
       </div>
     </div>

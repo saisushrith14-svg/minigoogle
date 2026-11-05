@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, ExternalLink, Network, Star } from 'lucide-react';
 import type { KeywordWeights, RankingMode, RankingResult, WebPage } from '../../types';
-import { cn } from '../../utils/cn';
 import { buildSnippet, highlightSegments } from '../../utils/snippet';
-import { formatPercent, formatScore, MODE_SHORT_LABELS } from '../../utils/format';
-import { Badge } from '../ui/Primitives';
+import { formatPercent, formatScore } from '../../utils/format';
 import { FactorBreakdown } from './FactorBreakdown';
 
 function HighlightedText({ text, query }: { readonly text: string; readonly query: string }) {
@@ -13,9 +10,9 @@ function HighlightedText({ text, query }: { readonly text: string; readonly quer
     <>
       {highlightSegments(text, query).map((segment, index) =>
         segment.highlighted ? (
-          <mark key={`${segment.text}-${index}`} className="mark-query">
+          <b key={`${segment.text}-${index}`} className="font-bold text-black bg-[#FFFFD0]">
             {segment.text}
-          </mark>
+          </b>
         ) : (
           <span key={`${segment.text}-${index}`}>{segment.text}</span>
         ),
@@ -32,7 +29,7 @@ export function ResultCard({
   isKeyPage,
   incomingCount,
   outgoingCount,
-  mode,
+  mode: _mode,
 }: {
   readonly result: RankingResult;
   readonly page: WebPage;
@@ -47,114 +44,126 @@ export function ResultCard({
   const snippet = buildSnippet(page.content, query);
 
   return (
-    <article className="fade-up rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-slate-300 sm:p-5">
-      <div className="flex items-start gap-3">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-100 font-mono text-sm font-bold text-slate-600">
-          {result.position}
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="mb-1 flex flex-wrap items-center gap-1.5">
-            <Badge variant={mode === 'keyword' ? 'amber' : mode === 'pagerank' ? 'violet' : 'blue'}>
-              {MODE_SHORT_LABELS[mode]}
-            </Badge>
-            <Badge variant="neutral">{page.category}</Badge>
-            {isKeyPage ? (
-              <Badge variant="green">
-                <Star size={11} aria-hidden="true" /> Key page
-              </Badge>
-            ) : null}
-          </div>
+    <article className="mb-4 text-left font-sans">
+      {/* 1998 Blue Link Title */}
+      <div>
+        <button
+          type="button"
+          onClick={() => setExpanded((open) => !open)}
+          className="serp-title block text-left cursor-pointer font-serif text-[18px] text-[#0000CC] underline hover:text-[#CC0000]"
+          aria-expanded={expanded}
+        >
+          <b>{page.title}</b>
+        </button>
+      </div>
 
+      {/* Snippet text */}
+      <div className="font-sans text-[13px] text-black leading-snug mt-0.5">
+        <HighlightedText text={snippet} query={query} />
+      </div>
+
+      {/* Green URL & Meta Line */}
+      <div className="font-mono text-[12px] text-[#008000] mt-0.5">
+        <span>{page.url}</span>
+        <span className="text-[#555555] text-xs font-sans ml-1">
+          - {page.category} -
           <button
             type="button"
             onClick={() => setExpanded((open) => !open)}
-            className="serp-title block text-left"
-            aria-expanded={expanded}
+            className="text-[#0000CC] underline ml-1 hover:text-[#CC0000]"
           >
-            {page.title}
+            [Cached copy]
           </button>
-          <p className="serp-url">{page.url}</p>
-          <p className="serp-snippet mt-1">
-            <HighlightedText text={snippet} query={query} />
+          <Link
+            to={`/graph?page=${encodeURIComponent(page.id)}`}
+            className="text-[#0000CC] underline ml-1 hover:text-[#CC0000]"
+          >
+            [Inspect in graph]
+          </Link>
+          {isKeyPage && (
+            <span className="text-[#D0A600] font-bold ml-1 font-mono">[Key Anchor]</span>
+          )}
+        </span>
+      </div>
+
+      {/* Retro Technical Graph Metadata box */}
+      <div
+        className="font-mono text-[11px] text-[#444444] bg-[#F8F9FA] p-1.5 mt-1"
+        style={{
+          border:
+            result.position > 3 && result.keywordScore > 0.8 && result.pageRank < 0.05
+              ? '1px dotted #BC0000'
+              : '1px dotted #808080',
+          backgroundColor:
+            result.position > 3 && result.keywordScore > 0.8 && result.pageRank < 0.05
+              ? '#FFF2F2'
+              : '#F8F9FA',
+        }}
+      >
+        <span className="text-[#0000CC] font-bold font-sans">[Rank #{result.position}]</span>
+        {' | '}
+        <span>Score: <b>{formatScore(result.finalScore)}</b></span>
+        {' | '}
+        <span>Keyword: {formatScore(result.keywordScore)}</span>
+        {' | '}
+        <span>PageRank: {formatScore(result.pageRank, 4)}</span>
+        {' | '}
+        <span>Inlinks: {incomingCount}</span>
+        {' | '}
+        <span>Outlinks: {outgoingCount}</span>
+        {result.behaviourScore !== undefined && (
+          <>
+            {' | '}
+            <span className="text-[#008000]">Behaviour: {formatScore(result.behaviourScore)}</span>
+          </>
+        )}
+      </div>
+
+      {/* Diagnostic breakdown toggle */}
+      <div className="mt-1 flex items-center space-x-2 text-xs">
+        <button
+          type="button"
+          onClick={() => setExpanded((open) => !open)}
+          className="btn-retro text-xs py-0.5 px-2"
+          aria-expanded={expanded}
+        >
+          {expanded ? 'Hide scoring details' : 'Why this rank?'}
+        </button>
+      </div>
+
+      {/* Expanded Factor Breakdown and Math */}
+      {expanded ? (
+        <div
+          className="mt-2 p-2 bg-[#FAFAFA] text-xs font-sans"
+          style={{ border: '1px solid #CCCCCC' }}
+        >
+          <p className="text-xs text-black leading-normal mb-2">
+            <b>Explanation:</b> {result.explanation}
           </p>
 
-          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
-            <span className="rounded-md bg-slate-900 px-2 py-1 font-mono font-semibold text-white">
-              score {formatScore(result.finalScore)}
-            </span>
-            <span className="rounded-md bg-amber-50 px-2 py-1 font-mono text-amber-800">
-              keyword {formatScore(result.keywordScore)}
-            </span>
-            <span className="rounded-md bg-violet-50 px-2 py-1 font-mono text-violet-800">
-              pagerank {formatScore(result.pageRank, 4)}
-            </span>
-            {result.behaviourScore !== undefined ? (
-              <span className="rounded-md bg-emerald-50 px-2 py-1 font-mono text-emerald-800">
-                behaviour {formatScore(result.behaviourScore)}
-              </span>
-            ) : null}
-            <span className="text-slate-400">
-              {incomingCount} in · {outgoingCount} out
-            </span>
-          </div>
+          <table className="table-retro text-xs mb-2">
+            <tbody>
+              <tr>
+                <td className="bg-[#EFEFEF] font-bold" width="25%">Normalized PageRank</td>
+                <td className="font-mono">{formatPercent(result.normalizedPageRank)}</td>
+                <td className="bg-[#EFEFEF] font-bold" width="25%">Raw PageRank (π)</td>
+                <td className="font-mono">{formatScore(result.pageRank, 6)}</td>
+              </tr>
+              <tr>
+                <td className="bg-[#EFEFEF] font-bold">Incoming Citations</td>
+                <td className="font-mono">{incomingCount}</td>
+                <td className="bg-[#EFEFEF] font-bold">Outgoing Citations</td>
+                <td className="font-mono">{outgoingCount}</td>
+              </tr>
+            </tbody>
+          </table>
 
-          <div className="mt-3 flex flex-wrap items-center gap-3">
-            <button
-              type="button"
-              onClick={() => setExpanded((open) => !open)}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-blue-700 hover:text-blue-800"
-              aria-expanded={expanded}
-            >
-              {expanded ? 'Hide scoring details' : 'Why this rank?'}
-              <ChevronDown
-                size={14}
-                className={cn('transition', expanded && 'rotate-180')}
-                aria-hidden="true"
-              />
-            </button>
-            <Link
-              to={`/graph?page=${encodeURIComponent(page.id)}`}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-slate-800"
-            >
-              <Network size={13} aria-hidden="true" /> Inspect in graph
-            </Link>
-            <span className="inline-flex items-center gap-1 text-xs text-slate-400">
-              <ExternalLink size={12} aria-hidden="true" /> Simulated URL
-            </span>
+          <div className="font-bold text-xs text-black mt-2 mb-1">
+            Keyword Relevance 8-Factor Decomposition:
           </div>
-
-          {expanded ? (
-            <div className="fade-up mt-4 border-t border-slate-100 pt-4">
-              <p className="text-sm leading-6 text-slate-700">{result.explanation}</p>
-              <dl className="mt-3 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
-                <div className="rounded-lg bg-slate-50 p-2">
-                  <dt className="text-slate-500">Normalized PageRank</dt>
-                  <dd className="font-mono font-semibold text-slate-900">
-                    {formatPercent(result.normalizedPageRank)}
-                  </dd>
-                </div>
-                <div className="rounded-lg bg-slate-50 p-2">
-                  <dt className="text-slate-500">Raw PageRank</dt>
-                  <dd className="font-mono font-semibold text-slate-900">
-                    {formatScore(result.pageRank, 6)}
-                  </dd>
-                </div>
-                <div className="rounded-lg bg-slate-50 p-2">
-                  <dt className="text-slate-500">Incoming links</dt>
-                  <dd className="font-mono font-semibold text-slate-900">{incomingCount}</dd>
-                </div>
-                <div className="rounded-lg bg-slate-50 p-2">
-                  <dt className="text-slate-500">Outgoing links</dt>
-                  <dd className="font-mono font-semibold text-slate-900">{outgoingCount}</dd>
-                </div>
-              </dl>
-              <div className="mt-3">
-                <FactorBreakdown factors={result.factorBreakdown} weights={keywordWeights} compact />
-              </div>
-            </div>
-          ) : null}
+          <FactorBreakdown factors={result.factorBreakdown} weights={keywordWeights} compact />
         </div>
-      </div>
+      ) : null}
     </article>
   );
 }

@@ -132,5 +132,124 @@ export const scientificNetworkDataset: Dataset = {
       publishedDate: '2024-10-16',
       educationalRole: 'Laboratory hub that adds citations to the foundational literature.',
     },
+    {
+      id: 'sn-kleinberg-paper',
+      url: 'https://www.cs.cornell.edu/kleinberg/hits-hub-authority.html',
+      title: 'Authoritative Sources in a Hyperlinked Environment (HITS Algorithm)',
+      headings: [
+        'Hubs and Authorities',
+        'Mutual Recursion Eigenvectors',
+        'Search Engine Link Topology',
+      ],
+      metaDescription:
+        'Jon Kleinberg’s seminal 1999 paper introducing the HITS algorithm, hubs, and authorities in web citation analysis.',
+      content:
+        'Hyperlink analysis of the World Wide Web reveals latent authoritative communities. By decomposing graph adjacency into mutually reinforcing hubs and authorities, search engines can isolate definitive sources. This work complements the random surfer model of the PageRank paper.',
+      category: 'Computer Science / Landmark Paper',
+      links: ['sn-pagerank-paper', 'sn-graph-theory'],
+      educationalRole: 'Foundational paper on link-structure analysis citing the PageRank paper and spectral graph theory.',
+    },
+    {
+      id: 'sn-salton-paper',
+      url: 'https://www.cornell-ir-archives.org/salton/vector-space-model',
+      title: 'Term-Weighting Approaches in Automatic Text Retrieval (Vector Space Model)',
+      headings: [
+        'Term Frequency and Inverted Document Frequency',
+        'Cosine Similarity',
+        'Text Normalization',
+      ],
+      metaDescription:
+        'Gerard Salton and Chris Buckley’s classical foundations of TF-IDF weighting and vector space relevance scoring.',
+      content:
+        'Effective automatic text retrieval depends on assigning weights to search terms proportional to their occurrences in documents and inversely related to collection frequency. These term-weighting formulations provide the textual matching baseline that modern web search engines combine with hyperlink graph topology.',
+      category: 'Computer Science / Landmark Paper',
+      links: ['sn-citation-review', 'sn-bibliometrics'],
+      educationalRole: 'Historical landmark paper representing classical pre-web information retrieval.',
+    },
+    {
+      id: 'sn-sigir-proceedings',
+      url: 'https://www.acm-sigir-archive.org/conferences/proceedings',
+      title: 'ACM SIGIR: Annual Conference on Research & Development in Information Retrieval',
+      headings: [
+        'Keynote Addresses',
+        'Evaluation Metrics & Benchmark TREC Datasets',
+        'Link-Based Ranking Sessions',
+      ],
+      metaDescription:
+        'Premier international conference on information retrieval, search engine evaluation, and index algorithms.',
+      content:
+        'ACM SIGIR serves as the definitive annual forum for information retrieval researchers. Proceedings detail breakthroughs in crawler design, inverted indexing, web hyperlink graphs, and classical text relevance. Several papers evaluate PageRank convergence under large-scale crawl graphs.',
+      category: 'Computer Science / Conference',
+      links: ['sn-pagerank-paper', 'sn-salton-paper', 'sn-conference'],
+      educationalRole: 'Premier IR academic venue citing classical text matching and modern web graph algorithms.',
+    },
+    {
+      id: 'sn-cern-archive',
+      url: 'https://www.w3-historical-archive.org/history/cern-hypertext',
+      title: 'W3C & CERN Historical Archives: Tim Berners-Lee’s Original Web Proposal',
+      headings: [
+        'Information Management: A Proposal',
+        'HyperText Transfer Protocol Specs',
+        'Universal Resource Identifiers',
+      ],
+      metaDescription:
+        'Historical documentation of Tim Berners-Lee’s 1989 CERN proposal establishing the World Wide Web architecture.',
+      content:
+        'The World Wide Web was conceived at CERN to allow high-energy physics researchers across institutes to share and link documentation transparently. The resulting decentralized directed hyperlink topology became the foundational graph upon which hypertextual search engines operate.',
+      category: 'History / Architecture',
+      links: ['sn-web-survey', 'sn-pagerank-paper'],
+      educationalRole: 'Historical architectural anchor documenting the origin of the World Wide Web citation graph.',
+    },
+    {
+      id: 'sn-digital-libraries',
+      url: 'https://www.ieee-computer-society.org/transactions/digital-libraries',
+      title: 'IEEE Transactions on Digital Libraries: Indexing Scholarly Citations',
+      headings: [
+        'Digital Library Architectures',
+        'Bibliographic Citation Indexing',
+        'Graph Centrality in Research',
+      ],
+      metaDescription:
+        'Scholarly journal exploring autonomous digital library indexing, citation matching, and scientific discovery.',
+      content:
+        'Automating scholarly discovery requires indexing research literature and evaluating citation centrality. Techniques developed for academic bibliometrics directly inspired the PageRank algorithm used in large-scale web search.',
+      category: 'Computer Science / Journal',
+      links: ['sn-bibliometrics', 'sn-pagerank-paper'],
+      educationalRole: 'Scholarly journal connecting bibliometric citation theories to web search engine architecture.',
+    },
+    {
+      id: 'sn-mit-ai-lab',
+      url: 'https://www.ai-laboratory.mit.edu/research/information-systems',
+      title: 'MIT AI Laboratory: Intelligent Information Extraction & Search Systems',
+      headings: [
+        'Autonomous Crawling Agents',
+        'Semantic Web Representation',
+        'Selected Faculty Papers',
+      ],
+      metaDescription:
+        'Research initiatives in automated web crawler agents, graph mining, and intelligent document indexing.',
+      content:
+        'The MIT Information Systems group investigates autonomous web harvesting and machine learning architectures for information extraction. Our graduate syllabus references foundational literature on hypertextual web retrieval, including the Stanford PageRank algorithm.',
+      category: 'University / Laboratory',
+      links: ['sn-pagerank-paper', 'sn-kleinberg-paper', 'sn-author-profile'],
+      educationalRole: 'Major university AI research lab citing Stanford and Cornell link ranking papers.',
+    },
+    {
+      id: 'sn-berkeley-ir',
+      url: 'https://www.ischool-berkeley.edu/research/search-and-retrieval',
+      title: 'UC Berkeley School of Information: Search & Retrieval Systems Group',
+      headings: [
+        'Information Architecture Seminars',
+        'Probabilistic Retrieval Models',
+        'Stanford InfoLab Colleague Links',
+      ],
+      metaDescription:
+        'Research into probabilistic retrieval models, Okapi BM25 ranking, and web crawl graph topologies.',
+      content:
+        'The Berkeley Information School conducts fundamental investigations into probabilistic retrieval models and search evaluation. Faculty members frequently collaborate with the Stanford InfoLab and reference Page & Brin’s classic web architecture papers in graduate seminars.',
+      category: 'University / Research Group',
+      links: ['sn-lab-page', 'sn-author-profile', 'sn-pagerank-paper'],
+      educationalRole: 'Peer academic research group providing institutional citation weight into the Stanford paper and lab.',
+    },
   ],
 };

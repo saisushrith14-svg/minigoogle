@@ -18,13 +18,13 @@ export const newWebsiteDataset: Dataset = {
       title: 'The Complete Sourdough Starter Guide for Beginners',
       headings: [
         'Sourdough Starter Guide: Day One to First Bake',
-        'Feeding Schedule and Hydration',
-        'Troubleshooting a Weak Starter',
+        'Feeding Schedule and Hydration in the Sourdough Starter Guide',
+        'Troubleshooting Your Sourdough Starter Guide',
       ],
       metaDescription:
         'A practical sourdough starter guide covering flour, hydration, feeding schedules, troubleshooting, and the first bake.',
       content:
-        'This sourdough starter guide walks a beginner from day one through the first loaf. Mix whole wheat flour and water, discard half each day, and feed at a predictable schedule. A healthy starter doubles within six hours, smells pleasantly sour, and bubbles throughout. The guide explains hydration ratios, temperature, troubleshooting, and how to adapt feeding when your kitchen is cold. Every step includes a clear rationale so new bakers can diagnose problems rather than follow a rigid recipe.',
+        'This comprehensive sourdough starter guide walks a beginner from day one through the first loaf. Mix whole wheat flour and water, discard half each day, and feed at a predictable schedule. A healthy starter doubles within six hours, smells pleasantly sour, and bubbles throughout. The sourdough starter guide explains hydration ratios, temperature, troubleshooting, and how to adapt feeding when your kitchen is cold. Every step of our sourdough starter guide includes a clear rationale so new bakers can diagnose problems rather than follow a rigid recipe.',
       category: 'Baking / New Independent Guide',
       links: ['nw-bakery', 'nw-flour-brand'],
       publishedDate: '2026-09-14',
@@ -52,7 +52,7 @@ export const newWebsiteDataset: Dataset = {
       metaDescription:
         'Forum discussion where home bakers share sourdough starter troubleshooting and favorite guides.',
       content:
-        'Community members discuss feeding schedules, mold, hooch, and sluggish sourdough starters. Several readers recommend the new Flour and Water sourdough starter guide for its clear troubleshooting section. Others share their own beginner bread baking experiments and photos.',
+        'Community members discuss feeding schedules, mold, hooch, and sluggish sourdough starters. Several readers recommend the new Flour and Water baking tutorial for its clear troubleshooting section. Others share their own beginner bread baking experiments and photos.',
       category: 'Baking / Community',
       links: ['nw-established-blog', 'nw-recipe-hub', 'nw-new-guide'],
       publishedDate: '2026-10-02',
@@ -113,6 +113,142 @@ export const newWebsiteDataset: Dataset = {
       links: ['nw-bakery', 'nw-recipe-hub'],
       publishedDate: '2019-11-04',
       educationalRole: 'Commercial ingredient authority with useful technical content and accumulated links.',
+    },
+    {
+      id: 'nw-culinary-institute',
+      url: 'https://www.national-culinary-arts.edu/baking',
+      title: 'National Culinary Arts Academy: Classical Baking Curricula',
+      headings: [
+        'Professional Bakery Arts',
+        'Fermentation & Yeast Biology',
+        'Alumni Bakeries',
+      ],
+      metaDescription:
+        'Accredited vocational diploma in artisan bakery production and fermentation science.',
+      content:
+        'The National Culinary Arts Academy trains master bakers in European hearth traditions. Our curriculum covers dough rheology, long fermentation techniques, and commercial deck oven operations. Many of our alumni founded celebrated bakeries like Artisan Hearth Craft Bakery.',
+      category: 'Education / Culinary',
+      links: ['nw-bakery', 'nw-recipe-hub', 'nw-magazine'],
+      educationalRole: 'Prestigious culinary institution endowing established bakeries and magazines with massive domain authority.',
+    },
+    {
+      id: 'nw-yeast-lab',
+      url: 'https://www.fermentation-science-institute.org/wild-cultures',
+      title: 'Fermentation Science Institute: Microbial Ecology of Wild Cultures',
+      headings: [
+        'Lactobacillus & Wild Yeast Symbiosis',
+        'Acidity Profiles',
+        'Grain Substrates',
+      ],
+      metaDescription:
+        'Peer-reviewed microbiological research on wild bacterial cultures and sourdough grain ecology.',
+      content:
+        'Academic study of microbial kinetics in traditional starters. Research demonstrates that symbiotic interactions between wild yeasts and lactic acid bacteria determine structural crumb and shelf longevity. We collaborate closely with Stone Mill Flour researchers.',
+      category: 'Science / Food Biology',
+      links: ['nw-flour-brand', 'nw-bakery'],
+      educationalRole: 'Scientific authority providing high-trust backlinks to established grain millers.',
+    },
+    {
+      id: 'nw-bread-machine',
+      url: 'https://www.home-baking-equipment-reviews.com/deck-ovens',
+      title: 'Home Baking Equipment: Dutch Ovens, Baking Stones & Peel Reviews',
+      headings: [
+        'Enamel Dutch Ovens for Crust',
+        'Steam Injection vs Cloche',
+        'Baker Forum Reviews',
+      ],
+      metaDescription:
+        'Independent ratings of cast iron Dutch ovens, clay cloches, and proofing bannetons for home bakers.',
+      content:
+        'Achieving blistered crusts at home requires trapped steam. We evaluate top Dutch ovens and baking stones against commercial standards. Home bakers in the community actively review kitchen setups on the Bakers Corner forum.',
+      category: 'Equipment / Reviews',
+      links: ['nw-forum', 'nw-recipe-hub'],
+      educationalRole: 'Equipment review blog directing link traffic into established community boards.',
+    },
+    {
+      id: 'nw-farmer-coop',
+      url: 'https://www.heritage-grain-growers.coop/varieties',
+      title: 'Heritage Grain Growers Cooperative: Ancient Einkorn and Spelt Varieties',
+      headings: [
+        'Ancient Grain Revival',
+        'Sustainable Soil Management',
+        'Certified Millers',
+      ],
+      metaDescription:
+        'Farmer cooperative preserving heirloom wheat varieties, spelt, and stone-ground heritage grains.',
+      content:
+        'Our farmer members cultivate organic heritage grains with complex flavor profiles. We supply certified stone-grind facilities including Stone Mill Flour to support artisan bakers nationwide. Read industry features in Pastry and Hearth Illustrated.',
+      category: 'Agriculture / Cooperative',
+      links: ['nw-flour-brand', 'nw-magazine'],
+      educationalRole: 'Agricultural cooperative node linking to certified millers and print magazines.',
+    },
+    {
+      id: 'nw-cookbook-publisher',
+      url: 'https://www.gastronomy-press-publishing.com/baking-titles',
+      title: 'Gastronomy Press: Award-Winning Bread and Pastry Books',
+      headings: [
+        'New Releases',
+        'Classic Baking Compendiums',
+        'Featured Food Authors',
+      ],
+      metaDescription:
+        'Publisher of definitive culinary manuals, bread anthologies, and home baking guides.',
+      content:
+        'Gastronomy Press is proud to publish James Beard award-winning culinary literature. Our titles include the celebrated hearth baking memoirs from Grandma’s Rustic Kitchen and professional guides curated with the National Culinary Academy.',
+      category: 'Publishing / Books',
+      links: ['nw-established-blog', 'nw-culinary-institute'],
+      educationalRole: 'Prestigious book publisher cementing the reputation of established food bloggers.',
+    },
+    {
+      id: 'nw-pastry-chef',
+      url: 'https://www.chefpierre-viennoiserie.com/laminated-dough',
+      title: 'Chef Pierre: The Art of Laminated Croissants & Brioche',
+      headings: [
+        'Butter Lamination Techniques',
+        'Cold Proofing Schedules',
+        'Artisan Bakery Tours',
+      ],
+      metaDescription:
+        'Master pastry chef notes on butter lamination, French brioche, and artisan morning breads.',
+      content:
+        'Mastering laminated pastry requires precise temperature control and European butter with high fat content. When selecting flour, we depend on stone-ground selections from Stone Mill Flour and draw inspiration from the Bakers Corner forum.',
+      category: 'Culinary / Masterclass',
+      links: ['nw-flour-brand', 'nw-forum', 'nw-bakery'],
+      educationalRole: 'Specialty chef portfolio sharing links with community forums and artisan suppliers.',
+    },
+    {
+      id: 'nw-culinary-history',
+      url: 'https://www.bread-history-archives.org/ancient-fermentation',
+      title: 'Bread History Archives: Ten Thousand Years of Fermented Grain',
+      headings: [
+        'Neolithic Flatbreads to Leavened Loaves',
+        'The Roman Panis Quadratus',
+        'Medieval Guilds',
+      ],
+      metaDescription:
+        'Historical documentation of grain domestication, wild yeast fermentation, and communal town ovens.',
+      content:
+        'Tracing the historical trajectory of human leavened bread from ancient Egypt through medieval communal ovens. This historical research project documents how natural sourdough cultures sustained civilizations for millennia before industrial yeast.',
+      category: 'History / Food Culture',
+      links: ['nw-established-blog', 'nw-magazine'],
+      educationalRole: 'Historical cultural archive linking to veteran food writers and culinary magazines.',
+    },
+    {
+      id: 'nw-home-cooks',
+      url: 'https://www.suburban-home-kitchen.net/weekend-bakes',
+      title: 'Suburban Home Kitchen: Weekend Family Baking & Sourdough Adventures',
+      headings: [
+        'Weekend Family Recipes',
+        'Feeding the Family Starter',
+        'Favorite Bread Websites',
+      ],
+      metaDescription:
+        'Parent and home cook blog sharing accessible family baking schedules and easy pantry recipes.',
+      content:
+        'Balancing work and weekend baking is easier with predictable sourdough schedules. We love Grandma’s Rustic Kitchen for warmth and comfort, and we frequently check the recipe hub when planning weekend family meals.',
+      category: 'Lifestyle / Food',
+      links: ['nw-established-blog', 'nw-recipe-hub', 'nw-new-guide'],
+      educationalRole: 'Friendly amateur blog that discovered the new guide, providing its very first organic inbound backlink.',
     },
   ],
 };

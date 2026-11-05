@@ -50,12 +50,12 @@ function metricColor(value: number, metric: 'keyword' | 'pagerank' | 'hybrid' | 
     case 'keyword':
       return interpolateColor(value, [203, 213, 225], [217, 119, 6]);
     case 'pagerank':
-      return interpolateColor(value, [203, 213, 225], [124, 58, 237]);
+      return interpolateColor(value, [203, 213, 225], [0, 0, 204]);
     case 'behaviour':
-      return interpolateColor(value, [203, 213, 225], [5, 150, 105]);
+      return interpolateColor(value, [203, 213, 225], [0, 128, 0]);
     case 'hybrid':
     default:
-      return interpolateColor(value, [203, 213, 225], [37, 99, 235]);
+      return interpolateColor(value, [203, 213, 225], [0, 0, 139]);
   }
 }
 
@@ -64,210 +64,182 @@ function PageNodeView({ data, selected }: NodeProps<PageNodeType>) {
   return (
     <div
       className={cn(
-        'w-[190px] rounded-xl border bg-white px-3 py-2.5 shadow-sm transition',
-        isActive
-          ? 'border-blue-500 shadow-lg ring-2 ring-blue-200'
-          : 'border-slate-200 hover:border-slate-300 hover:shadow-md',
+        'w-[180px] bg-white text-black font-sans text-xs p-2 select-none cursor-pointer',
+        isActive ? 'ring-2 ring-[#0000CC] bg-[#FFFFF0]' : 'hover:bg-[#F8F9FA]',
       )}
-      style={{ borderTopColor: data.color, borderTopWidth: 4 }}
+      style={{
+        border: isActive ? '2px solid #0000CC' : '1px solid #808080',
+        borderTop: `4px solid ${data.color}`,
+      }}
     >
       <Handle
         type="target"
         position={Position.Top}
-        className="!h-2 !w-2 !border-0 !bg-slate-300"
+        className="!h-2 !w-2 !border-0 !bg-[#808080]"
       />
-      <div className="flex items-center justify-between gap-2">
-        <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] font-bold text-slate-600">
+      <div className="flex items-center justify-between gap-1 mb-1">
+        <span className="bg-[#EFEFEF] px-1 py-0.2 border border-[#CCCCCC] font-mono text-[10px] font-bold text-black">
           #{data.rank}
         </span>
         {data.isKey ? (
-          <span className="rounded bg-emerald-50 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-emerald-700">
-            key
+          <span className="text-[#BC0000] font-mono font-bold text-[9px] uppercase tracking-wide">
+            [Anchor]
           </span>
         ) : null}
       </div>
-      <p className="mt-1.5 line-clamp-2 text-[11px] font-semibold leading-4 text-slate-900">
+      <p className="line-clamp-2 text-[11px] font-bold font-serif leading-tight text-[#0000CC]">
         {data.page.title}
       </p>
-      <p className="mt-1 line-clamp-1 text-[10px] text-slate-500">{data.page.category}</p>
-      <div className="mt-2 flex items-center justify-between border-t border-slate-100 pt-1.5">
-        <span className="text-[9px] uppercase tracking-wide text-slate-400">{data.metricLabel}</span>
-        <span className="font-mono text-[10px] font-semibold text-slate-700">
+      <p className="mt-0.5 line-clamp-1 text-[10px] font-mono text-[#008000]">
+        {data.page.url}
+      </p>
+      <div className="mt-1 flex items-center justify-between border-t border-[#EEEEEE] pt-1">
+        <span className="text-[9px] uppercase tracking-wide text-[#777777]">
+          {data.metricLabel}
+        </span>
+        <span className="font-mono text-[10px] font-bold text-black">
           {formatScore(data.score)}
         </span>
       </div>
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!h-2 !w-2 !border-0 !bg-slate-400"
+        className="!h-2 !w-2 !border-0 !bg-[#808080]"
       />
     </div>
   );
 }
 
-const nodeTypes = { [PAGE_NODE_TYPE]: PageNodeView };
-
-export interface KnowledgeGraphProps {
-  readonly pages: readonly WebPage[];
-  readonly metricScores: Readonly<Record<string, number>>;
-  readonly metric: 'keyword' | 'pagerank' | 'hybrid' | 'behaviour';
-  readonly metricLabel: string;
-  readonly selectedId: string | null;
-  readonly onSelect: (pageId: string | null) => void;
-  readonly layout: LayoutMode;
-  readonly keyPageIds: readonly string[];
-  readonly height?: number;
-}
+const nodeTypes = {
+  [PAGE_NODE_TYPE]: PageNodeView,
+};
 
 export function KnowledgeGraph({
   pages,
-  metricScores,
+  scores,
+  selectedId,
   metric,
   metricLabel,
-  selectedId,
-  onSelect,
-  layout,
+  layout = 'force',
+  onSelectPage,
   keyPageIds,
-  height = 560,
-}: KnowledgeGraphProps) {
-  const ranked = useMemo(() => {
-    const order = pages
-      .map((page) => ({ page, score: metricScores[page.id] ?? 0 }))
-      .sort((a, b) => b.score - a.score || a.page.id.localeCompare(b.page.id));
+}: {
+  readonly pages: readonly WebPage[];
+  readonly scores: Readonly<Record<string, number>>;
+  readonly selectedId?: string | null;
+  readonly metric: 'keyword' | 'pagerank' | 'hybrid' | 'behaviour';
+  readonly metricLabel: string;
+  readonly layout?: LayoutMode;
+  readonly onSelectPage: (id: string | null) => void;
+  readonly keyPageIds?: readonly string[];
+}) {
+  const keySet = useMemo(() => new Set(keyPageIds ?? []), [keyPageIds]);
+
+  const pageRanks = useMemo(() => {
+    const sorted = [...pages].sort((a, b) => (scores[b.id] ?? 0) - (scores[a.id] ?? 0));
     const ranks = new Map<string, number>();
-    order.forEach((entry, index) => ranks.set(entry.page.id, index + 1));
-    return { order, ranks };
-  }, [metricScores, pages]);
+    sorted.forEach((page, index) => ranks.set(page.id, index + 1));
+    return ranks;
+  }, [pages, scores]);
 
-  const positions = useMemo<Record<string, Point>>(
-    () =>
-      layout === 'force'
-        ? computeForceLayout(pages)
-        : computeCircularLayout(pages),
-    [layout, pages],
-  );
-
-  const buildNodes = useCallback(
-    (currentPositions: Record<string, Point>): PageNodeType[] =>
-      pages.map((page) => {
-        const score = metricScores[page.id] ?? 0;
-        return {
-          id: page.id,
-          type: PAGE_NODE_TYPE,
-          position: currentPositions[page.id] ?? { x: 0, y: 0 },
-          selected: selectedId === page.id,
-          data: {
-            page,
-            rank: ranked.ranks.get(page.id) ?? 0,
-            score,
-            color: metricColor(score, metric),
-            isKey: keyPageIds.includes(page.id),
-            selected: selectedId === page.id,
-            metricLabel,
-          },
-        };
-      }),
-    [keyPageIds, metric, metricLabel, metricScores, pages, ranked.ranks, selectedId],
-  );
-
-  const [nodes, setNodes] = useState<PageNodeType[]>(() => buildNodes(positions));
-
-  useEffect(() => {
-    setNodes(buildNodes(positions));
-  }, [buildNodes, positions]);
-
-  useEffect(() => {
-    setNodes((previous) =>
-      previous.map((node) => {
-        const score = metricScores[node.id] ?? 0;
-        return {
-          ...node,
-          selected: selectedId === node.id,
-          data: {
-            ...node.data,
-            rank: ranked.ranks.get(node.id) ?? node.data.rank,
-            score,
-            color: metricColor(score, metric),
-            isKey: keyPageIds.includes(node.id),
-            selected: selectedId === node.id,
-            metricLabel,
-          },
-        };
-      }),
-    );
-  }, [keyPageIds, metric, metricLabel, metricScores, ranked.ranks, selectedId]);
-
-  const onNodesChange = useCallback(
-    (changes: NodeChange<PageNodeType>[]) => {
-      setNodes((previous) => applyNodeChanges(changes, previous));
-    },
-    [],
-  );
-
-  const edges = useMemo<Edge[]>(() => {
-    const validIds = new Set(pages.map((page) => page.id));
-    const result: Edge[] = [];
+  const positions = useMemo(() => {
+    const coords =
+      layout === 'circular'
+        ? computeCircularLayout(pages, { width: 700, height: 480 })
+        : computeForceLayout(pages, { width: 700, height: 480 });
+    const map = new Map<string, Point>();
     pages.forEach((page) => {
-      page.links.forEach((target) => {
-        if (!validIds.has(target)) return;
-        const touchesSelection =
-          selectedId !== null && (page.id === selectedId || target === selectedId);
-        result.push({
-          id: `${page.id}->${target}`,
-          source: page.id,
-          target,
-          type: 'smoothstep',
+      map.set(page.id, coords[page.id] ?? { x: 350, y: 240 });
+    });
+    return map;
+  }, [layout, pages]);
+
+  const initialNodes: PageNodeType[] = useMemo(() => {
+    return pages.map((page) => {
+      const score = scores[page.id] ?? 0;
+      const rank = pageRanks.get(page.id) ?? 1;
+      const color = metricColor(score, metric);
+      const isKey = keySet.has(page.id);
+      const point = positions.get(page.id) ?? { x: 350, y: 240 };
+      return {
+        id: page.id,
+        type: PAGE_NODE_TYPE,
+        position: point,
+        data: {
+          page,
+          rank,
+          score,
+          color,
+          isKey,
+          selected: page.id === selectedId,
+          metricLabel,
+        },
+      };
+    });
+  }, [keySet, metric, metricLabel, pageRanks, pages, positions, scores, selectedId]);
+
+  const [nodes, setNodes] = useState<PageNodeType[]>(initialNodes);
+
+  useEffect(() => {
+    setNodes(initialNodes);
+  }, [initialNodes]);
+
+  const onNodesChange = useCallback((changes: NodeChange<PageNodeType>[]) => {
+    setNodes((current) => applyNodeChanges(changes, current));
+  }, []);
+
+  const edges: Edge[] = useMemo(() => {
+    const pageIds = new Set(pages.map((p) => p.id));
+    const list: Edge[] = [];
+    pages.forEach((source) => {
+      source.links.forEach((targetId) => {
+        if (!pageIds.has(targetId)) return;
+        const edgeId = `${source.id}->${targetId}`;
+        const connectsSelected = selectedId === source.id || selectedId === targetId;
+        const isFromSelected = selectedId === source.id;
+        list.push({
+          id: edgeId,
+          source: source.id,
+          target: targetId,
+          type: 'default',
+          animated: connectsSelected,
           markerEnd: {
             type: MarkerType.ArrowClosed,
-            width: 16,
-            height: 16,
-            color: touchesSelection ? '#2563eb' : '#94a3b8',
+            width: 14,
+            height: 14,
+            color: isFromSelected ? '#0000CC' : connectsSelected ? '#CC0000' : '#808080',
           },
           style: {
-            stroke: touchesSelection ? '#2563eb' : '#cbd5e1',
-            strokeWidth: touchesSelection ? 2 : 1.25,
-            opacity: selectedId === null || touchesSelection ? 1 : 0.35,
+            stroke: isFromSelected ? '#0000CC' : connectsSelected ? '#CC0000' : '#A0A0A0',
+            strokeWidth: connectsSelected ? 2 : 1,
           },
-          animated: touchesSelection,
         });
       });
     });
-    return result;
+    return list;
   }, [pages, selectedId]);
 
   return (
-    <div
-      className="grid-paper relative overflow-hidden rounded-2xl border border-slate-200 bg-slate-50"
-      style={{ height }}
-    >
+    <div className="relative h-[500px] w-full border border-[#808080] bg-white font-sans">
       <ReactFlow
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
-        onNodeClick={(_, node) => onSelect(node.id)}
-        onPaneClick={() => onSelect(null)}
+        onNodeClick={(_event, node) => onSelectPage(node.id)}
+        onPaneClick={() => onSelectPage(null)}
         fitView
-        fitViewOptions={{ padding: 0.22 }}
-        minZoom={0.25}
-        maxZoom={1.8}
-        nodesConnectable={false}
-        proOptions={{ hideAttribution: true }}
-        aria-label="Interactive directed hyperlink graph"
+        fitViewOptions={{ padding: 0.2 }}
+        minZoom={0.3}
+        maxZoom={2}
       >
-        <Background variant={BackgroundVariant.Dots} gap={24} size={1} color="#cbd5e1" />
-        <Controls showInteractive={false} />
+        <Background variant={BackgroundVariant.Dots} gap={16} size={1} color="#C0C0C0" />
+        <Controls className="!border-[#808080] !bg-[#EFEFEF] !shadow-none !rounded-none" />
         <MiniMap
-          pannable
-          zoomable
-          nodeColor={(node) => String(node.data.color ?? '#94a3b8')}
-          maskColor="rgba(248, 250, 252, 0.75)"
-          className="!bg-white"
+          nodeColor={(n) => (n.data?.color as string) ?? '#808080'}
+          className="!border-[#808080] !bg-[#FAFAFA] !rounded-none"
         />
       </ReactFlow>
-      <div className="pointer-events-none absolute bottom-3 left-3 rounded-lg border border-slate-200 bg-white/90 px-2.5 py-1.5 text-[10px] font-medium text-slate-500 backdrop-blur">
-        Drag nodes · scroll to zoom · click to inspect
-      </div>
     </div>
   );
 }

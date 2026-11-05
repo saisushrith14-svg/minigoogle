@@ -4,24 +4,25 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        serif: ['Times New Roman', 'Times', 'serif'],
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        mono: ['JetBrains Mono', 'Fira Code', 'Courier New', 'monospace'],
+        serif: ['"Times New Roman"', 'Times', 'serif'],
+        sans: ['Arial', 'Helvetica', 'sans-serif'],
+        mono: ['"Courier New"', 'Courier', 'monospace'],
       },
       colors: {
         google: {
-          blue: '#1a0dab',
-          green: '#006621',
-          grey: '#545454',
-          border: '#dfe1e5',
-          lightBg: '#f8f9fa',
-          accent: '#4285f4',
-          yellow: '#fbbc05',
-          red: '#ea4335',
+          blue: '#0000CC',
+          red: '#CC0000',
+          yellow: '#FFCC00',
+          gold: '#D0A600',
+          green: '#008000',
+          darkGreen: '#002200',
+          grey: '#808080',
+          border: '#808080',
+          lightBg: '#EFEFEF',
+          searchBarBg: '#E5ECF9',
         },
       },
     },
   },
   plugins: [],
 };
-

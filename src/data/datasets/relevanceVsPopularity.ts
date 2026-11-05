@@ -107,5 +107,141 @@ export const relevanceVsPopularityDataset: Dataset = {
       links: ['rp-celebrity', 'rp-entertainment'],
       educationalRole: 'Long-tail entertainment blog adding another popularity link to the celebrity page.',
     },
+    {
+      id: 'rp-sports-network',
+      url: 'https://www.global-sports-broadcast.example/scores',
+      title: 'Global Sports Network: Live Scores, Highlights and Match Reports',
+      headings: [
+        'Match Day Scores',
+        'Championship Highlights',
+        'Entertainment News',
+      ],
+      metaDescription:
+        'Live real-time sports ticker, league tables, player interviews, and sports culture.',
+      content:
+        'Catch live scores across premier soccer, basketball, and tennis tournaments. Watch post-game press conferences and read commentary on athlete lifestyle features in the Entertainment Daily gazette.',
+      category: 'Sports / Media',
+      links: ['rp-news-portal', 'rp-entertainment'],
+      educationalRole: 'Massive popularity hub linking to mainstream news and entertainment portals.',
+    },
+    {
+      id: 'rp-music-charts',
+      url: 'https://www.top40-music-bulletin.example/charts',
+      title: 'Top 40 Music Bulletin: Weekly Single Charts & Artist Interviews',
+      headings: [
+        'Top 40 Single Countdown',
+        'Music Video Premieres',
+        'Red Carpet Fashion',
+      ],
+      metaDescription:
+        'Official weekly music rankings, album reviews, streaming numbers, and artist features.',
+      content:
+        'This week’s single charts celebrate breakout pop hits and record-breaking streaming records. Read our exclusive interview with chart-topping artists and check red carpet coverage on Celebrity Headlines.',
+      category: 'Music / Entertainment',
+      links: ['rp-celebrity', 'rp-news-portal'],
+      educationalRole: 'Pop culture media node adding link weight to the celebrity headline page.',
+    },
+    {
+      id: 'rp-viral-memes',
+      url: 'https://www.viral-buzz-feed.example/trending',
+      title: 'Viral Buzz Feed: Trending Clips, Memes, and Internet Culture',
+      headings: [
+        'Trending Now',
+        'Internet Culture Watch',
+        'Daily Celebrity Gossip',
+      ],
+      metaDescription:
+        'The fastest growing viral videos, internet culture memes, and trending celebrity moments.',
+      content:
+        'From hilarious backstage blunders to trending red carpet memes, our editors aggregate the web’s most shared video moments. See what pop culture blogs and entertainment news sites are saying.',
+      category: 'Internet / Viral Media',
+      links: ['rp-blog', 'rp-celebrity', 'rp-entertainment'],
+      educationalRole: 'High-traffic viral site channeling user attention and backlinks into the entertainment cluster.',
+    },
+    {
+      id: 'rp-shopping-mall',
+      url: 'https://www.consumer-lifestyle-deals.example/home',
+      title: 'Consumer Lifestyle Deals: Smart Home Tech & Seasonal Savings',
+      headings: [
+        'Flash Deals',
+        'Smart Appliances',
+        'Celebrity Style Picks',
+      ],
+      metaDescription:
+        'Online shopping reviews, home appliance deals, and popular lifestyle recommendations.',
+      content:
+        'Upgrade your kitchen with energy-saving smart appliances and eco-friendly home products. Discover affordable style picks featured by celebrity influencers in Entertainment Daily and mainstream wire news.',
+      category: 'Ecommerce / Lifestyle',
+      links: ['rp-news-portal', 'rp-celebrity'],
+      educationalRole: 'Commercial consumer lifestyle site linking to top-level news and celebrity portals.',
+    },
+    {
+      id: 'rp-weather-channel',
+      url: 'https://www.national-weather-wire.example/forecast',
+      title: 'National Weather Wire: Severe Weather Radar & Climate Trends',
+      headings: [
+        'National Radar Map',
+        'Severe Storm Watches',
+        'Long Range Climate Data',
+      ],
+      metaDescription:
+        'Official meteorological forecasts, regional satellite radar, and climate pattern analyses.',
+      content:
+        'Severe weather radar updates show winter storm systems moving across the Midwest. For detailed environmental reports on global atmospheric warming and climate solutions, consult the Federal Environmental Agency and Applied Climate Science.',
+      category: 'Science / Weather',
+      links: ['rp-gov', 'rp-science'],
+      educationalRole: 'Authoritative meteorology service directing link equity toward scientific and governmental research.',
+    },
+    {
+      id: 'rp-solar-tech',
+      url: 'https://www.clean-solar-innovations.example/photovoltaic',
+      title: 'Clean Solar Innovations: Next-Generation Photovoltaic Cells',
+      headings: [
+        'High-Efficiency Solar Materials',
+        'Perovskite Technology',
+        'Grid Interconnection',
+      ],
+      metaDescription:
+        'Engineering advances in commercial photovoltaic efficiency, grid storage, and clean power generation.',
+      content:
+        'Next-generation perovskite-silicon tandem cells demonstrate energy conversion efficiencies exceeding 30 percent in laboratory tests. These solar breakthroughs provide vital engineering foundations for practical climate change solutions. Research details appear in Applied Climate Science.',
+      category: 'Technology / Clean Energy',
+      links: ['rp-solutions', 'rp-science'],
+      educationalRole: 'Technical engineering page providing a direct, highly-relevant inlink to the climate solutions paper.',
+    },
+    {
+      id: 'rp-wind-consortium',
+      url: 'https://www.offshore-wind-alliance.example/turbines',
+      title: 'Offshore Wind Alliance: Deep-Water Marine Turbine Engineering',
+      headings: [
+        'Floating Wind Turbines',
+        'Marine Ecology Impact',
+        'Clean Energy Grid Integration',
+      ],
+      metaDescription:
+        'Deep-water wind energy deployment, turbine aerodynamics, and coastal clean energy integration.',
+      content:
+        'Offshore floating wind installations capture steady maritime wind resources. Our engineering consortium collaborates with federal energy regulators to integrate massive clean electricity into the national grid, as outlined in the Comprehensive Climate Solutions overview.',
+      category: 'Energy / Infrastructure',
+      links: ['rp-solutions', 'rp-gov'],
+      educationalRole: 'Infrastructure engineering consortium reinforcing the climate solutions document.',
+    },
+    {
+      id: 'rp-climate-coalition',
+      url: 'https://www.global-reforestation-network.org/restoration',
+      title: 'Global Reforestation Network: Nature-Based Carbon Sinks',
+      headings: [
+        'Forest Landscape Restoration',
+        'Biodiversity Corridors',
+        'Carbon Sequestration Models',
+      ],
+      metaDescription:
+        'Ecological restoration initiatives, forest conservation projects, and nature-based carbon sequestration.',
+      content:
+        'Reforesting degraded ecological corridors offers one of the most cost-effective nature-based carbon capture mechanisms available today. Our international field programs follow protocols published in Applied Climate Science and endorsed by the Federal Environmental Agency.',
+      category: 'Non-Profit / Conservation',
+      links: ['rp-science', 'rp-gov', 'rp-solutions'],
+      educationalRole: 'Conservation non-profit linking to environmental science and the solutions paper.',
+    },
   ],
 };

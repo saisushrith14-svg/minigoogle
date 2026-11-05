@@ -32,7 +32,7 @@ export const DatasetSchema = z.object({
     'relevance-vs-popularity',
     'scientific-network',
   ]),
-  pages: z.array(WebPageSchema).min(6, 'Dataset must have at least 6 pages').max(15, 'Dataset should not exceed 15 pages for pedagogical clarity'),
+  pages: z.array(WebPageSchema).min(6, 'Dataset must have at least 6 pages').max(30, 'Dataset should not exceed 30 pages for pedagogical clarity'),
   defaultQuery: z.string().optional(),
   testQueries: z.array(z.string()).optional(),
   educationalNotes: z.string().optional(),

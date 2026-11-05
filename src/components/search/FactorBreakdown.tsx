@@ -1,5 +1,4 @@
 import type { KeywordFactors, KeywordWeights } from '../../types';
-import { cn } from '../../utils/cn';
 import { formatPercent, formatScore } from '../../utils/format';
 
 const FACTOR_ROWS: ReadonlyArray<{
@@ -11,7 +10,7 @@ const FACTOR_ROWS: ReadonlyArray<{
   {
     key: 'termFrequency',
     label: 'Term frequency',
-    description: 'Saturating count of query terms in the body.',
+    description: 'Saturating count of query terms in body.',
     weighted: true,
   },
   {
@@ -23,37 +22,37 @@ const FACTOR_ROWS: ReadonlyArray<{
   {
     key: 'titleMatch',
     label: 'Title match',
-    description: 'Fraction of query terms present in the title.',
+    description: 'Fraction of query terms present in title.',
     weighted: true,
   },
   {
     key: 'headingMatch',
     label: 'Heading match',
-    description: 'Weighted H1–H3 coverage of the query terms.',
+    description: 'Weighted H1–H3 coverage of query terms.',
     weighted: true,
   },
   {
     key: 'metaMatch',
-    label: 'Meta match',
-    description: 'Query coverage in the meta description.',
+    label: 'Meta description',
+    description: 'Query coverage in meta description tag.',
     weighted: true,
   },
   {
     key: 'exactPhraseMatch',
     label: 'Exact phrase',
-    description: 'Contiguous multi-word phrase appears in the body.',
+    description: 'Contiguous multi-word phrase appears in body.',
     weighted: true,
   },
   {
     key: 'proximity',
     label: 'Proximity',
-    description: 'Closeness of all query terms in the body.',
+    description: 'Closeness of all query terms in document text.',
     weighted: true,
   },
   {
     key: 'lengthNormalization',
     label: 'Length normalization',
-    description: 'Symmetric correction for unusually short or long pages.',
+    description: 'Correction preventing extreme short/long page skew.',
     weighted: false,
   },
 ];
@@ -61,7 +60,7 @@ const FACTOR_ROWS: ReadonlyArray<{
 export function FactorBreakdown({
   factors,
   weights,
-  compact = false,
+  compact: _compact = false,
 }: {
   readonly factors: KeywordFactors;
   readonly weights: KeywordWeights;
@@ -73,37 +72,40 @@ export function FactorBreakdown({
   );
 
   return (
-    <div className={cn('grid gap-2.5', compact ? 'sm:grid-cols-2' : 'sm:grid-cols-2 lg:grid-cols-4')}>
-      {FACTOR_ROWS.map((row) => {
-        const value = factors[row.key];
-        const weight = row.weighted ? weights[row.key as keyof KeywordWeights] : 0;
-        const share = row.weighted && totalWeight > 0 ? weight / totalWeight : 0;
-        return (
-          <div key={row.key} className="rounded-xl border border-slate-200 bg-white p-3">
-            <div className="flex items-baseline justify-between gap-2">
-              <span className="text-xs font-semibold text-slate-700">{row.label}</span>
-              <span className="font-mono text-xs font-semibold text-slate-500">
-                {formatScore(value, 2)}
-              </span>
-            </div>
-            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100">
-              <div
-                className={cn(
-                  'h-full rounded-full',
-                  row.weighted ? 'bg-blue-500' : 'bg-slate-400',
-                )}
-                style={{ width: `${Math.max(0, Math.min(1, value)) * 100}%` }}
-              />
-            </div>
-            <div className="mt-1.5 flex items-center justify-between gap-2">
-              <span className="text-[11px] leading-4 text-slate-500">{row.description}</span>
-              <span className="shrink-0 font-mono text-[10px] text-slate-400">
-                {row.weighted ? `${formatPercent(share)} weight` : 'multiplier'}
-              </span>
-            </div>
-          </div>
-        );
-      })}
+    <div className="w-full overflow-x-auto my-2">
+      <table className="table-retro text-xs">
+        <thead>
+          <tr className="bg-[#EFEFEF] text-black">
+            <th className="p-1 border border-[#808080]">Factor</th>
+            <th className="p-1 border border-[#808080]">Description</th>
+            <th className="p-1 border border-[#808080] text-right">Raw Value</th>
+            <th className="p-1 border border-[#808080] text-right">Contribution</th>
+          </tr>
+        </thead>
+        <tbody>
+          {FACTOR_ROWS.map((row) => {
+            const value = factors[row.key];
+            const weight = row.weighted ? weights[row.key as keyof KeywordWeights] : 0;
+            const share = row.weighted && totalWeight > 0 ? weight / totalWeight : 0;
+            return (
+              <tr key={row.key} className="hover:bg-[#F8F9FA]">
+                <td className="p-1 border border-[#808080] font-bold text-black whitespace-nowrap">
+                  {row.label}
+                </td>
+                <td className="p-1 border border-[#808080] text-[#555555]">
+                  {row.description}
+                </td>
+                <td className="p-1 border border-[#808080] font-mono text-right text-black">
+                  {formatScore(value, 3)}
+                </td>
+                <td className="p-1 border border-[#808080] font-mono text-right text-[#0000CC]">
+                  {row.weighted ? `${formatPercent(share)} weight` : 'multiplier'}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }

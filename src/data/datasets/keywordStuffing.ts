@@ -129,6 +129,142 @@ export const keywordStuffingDataset: Dataset = {
       links: ['ks-authentic', 'ks-travel-forum'],
       educationalRole: 'Independent blog contributing an organic inbound link to the authentic guide.',
     },
+    {
+      id: 'ks-hotel-aggregator',
+      url: 'https://www.worldwide-lodging-network.org/accommodations',
+      title: 'Worldwide Lodging Network: Verified Hotel and Airfare Packages',
+      headings: [
+        'Hotel & Flight Package Reservations',
+        'Partner Airlines',
+        'Travel Advice',
+      ],
+      metaDescription:
+        'Independent booking directory for global hotels, lodging discounts, and airline partner connections.',
+      content:
+        'Planning an international itinerary requires coordinating both lodging and air transportation. Rather than trusting unverified discount portals that spam search engines, our directory links directly to certified carriers like SkyWings International and trusted travel advisory publications like Global Travel Insider.',
+      category: 'Travel / Lodging',
+      links: ['ks-airline-hub', 'ks-authentic'],
+      educationalRole: 'Commercial aggregator linking to legitimate corporate airline hubs and consumer editorial sources.',
+    },
+    {
+      id: 'ks-tourism-board',
+      url: 'https://www.euro-tourism-commission.eu/visitor-guide',
+      title: 'European Tourism Commission - Official Visitor Transit & Flight Guide',
+      headings: [
+        'Visiting Europe',
+        'International Flight Gateways',
+        'Travel Advisory',
+      ],
+      metaDescription:
+        'Official European visitor travel bureau providing comprehensive guidelines for trans-Atlantic air transit and rail connections.',
+      content:
+        'Welcome to Europe. International visitors arriving by air will find major arrival points at Metropolitan International Airport. For reliable and safe ticketing advice, visitors should consult the Consumer Protection Bureau alerts and the Global Travel Insider guide to avoid counterfeit ticket schemes.',
+      category: 'Government / Tourism',
+      links: ['ks-airport-guide', 'ks-consumer-watch', 'ks-authentic'],
+      educationalRole: 'Authoritative governmental tourism portal transmitting substantial link authority to transportation and editorial nodes.',
+    },
+    {
+      id: 'ks-aviation-news',
+      url: 'https://www.commercial-aviation-weekly.com/industry-analysis',
+      title: 'Commercial Aviation Weekly: Airline Fleet Capacity and Ticket Pricing Trends',
+      headings: [
+        'Airline Industry Financial Analysis',
+        'Yield Management Strategies',
+        'Carrier Route Networks',
+      ],
+      metaDescription:
+        'Industry trade journal analyzing airline seat yield management, hub-and-spoke carrier economics, and route expansions.',
+      content:
+        'Major commercial airlines, including SkyWings International, have shifted passenger ticket pricing toward dynamic computer yield algorithms. Industry analysts point out that legitimate consumer discounts emerge during seasonal lull periods rather than through predatory fly-by-night discount brokers.',
+      category: 'News / Industry',
+      links: ['ks-airline-hub', 'ks-travel-forum'],
+      educationalRole: 'Trade journalism node establishing contextual industry linkages to primary airlines and consumer forums.',
+    },
+    {
+      id: 'ks-fare-tracker',
+      url: 'https://www.farewatch-alerts-bulletin.net/tracking',
+      title: 'FareWatch Community: Real-Time Airfare Fluctuation & Price Trend Alerts',
+      headings: [
+        'Airfare Price Tracker',
+        'Recent Route Reductions',
+        'Community Discussions',
+      ],
+      metaDescription:
+        'Crowdsourced price alert service tracking daily flight fare reductions and seat sale announcements.',
+      content:
+        'FareWatch tracks fluctuating airfare across hundreds of routes daily. Our community members share active discount discoveries on the Flyer Community forum. Remember to compare direct SkyWings fares with verified advice from Global Travel Insider before finalizing bookings.',
+      category: 'Community / Tool',
+      links: ['ks-travel-forum', 'ks-authentic', 'ks-airline-hub'],
+      educationalRole: 'Community tool node driving interactive traffic and link authority to editorial advice and forums.',
+    },
+    {
+      id: 'ks-rail-connections',
+      url: 'https://www.trans-railway-transit.org/airport-express',
+      title: 'Trans-Continental Rail: High-Speed Airport Express Connections',
+      headings: [
+        'Airport Rail Express Services',
+        'Integrated Air-Rail Tickets',
+        'Metropolitan Hubs',
+      ],
+      metaDescription:
+        'High-speed intercity passenger rail network connecting city centers directly to major international airport terminals.',
+      content:
+        'The Metropolitan Express connects the downtown central station directly to Metropolitan International Airport Terminal 2 in under 20 minutes. Passengers flying on partner carriers such as SkyWings can check their luggage directly at the city rail terminal.',
+      category: 'Infrastructure / Transit',
+      links: ['ks-airport-guide', 'ks-airline-hub'],
+      educationalRole: 'Transportation infrastructure node tightly linking airport and airline authority nodes.',
+    },
+    {
+      id: 'ks-credit-cards',
+      url: 'https://www.frequent-points-advisor.com/credit-rewards',
+      title: 'Points & Miles Advisor: Maximizing Frequent Flyer Credit Rewards',
+      headings: [
+        'Earning Airline Miles',
+        'Transfer Partners & Redemptions',
+        'Avoiding Reward Traps',
+      ],
+      metaDescription:
+        'Credit card point redemption strategies for airline frequent flyer loyalty programs.',
+      content:
+        'Earning airline reward points allows frequent flyers to travel internationally for pennies on the dollar. Members of our flyer community regularly share transfer maximization techniques on the Flyer Community board. When redeeming points, always check availability directly on SkyWings International or consult the Global Travel Insider.',
+      category: 'Finance / Travel',
+      links: ['ks-travel-forum', 'ks-airline-hub', 'ks-authentic'],
+      educationalRole: 'Financial niche blog reinforcing the cluster around frequent flyer forums and authentic guides.',
+    },
+    {
+      id: 'ks-weather-bureau',
+      url: 'https://www.aviation-weather-forecasts.gov/flight-conditions',
+      title: 'National Weather Service: Aviation Flight Hazards & Terminal Visibility',
+      headings: [
+        'Regional Radar & Terminal Weather',
+        'Turbulence & Jet Stream Advisories',
+        'Airport Operations',
+      ],
+      metaDescription:
+        'Official national meteorological forecasts and runway visibility conditions for commercial airport hubs.',
+      content:
+        'Terminal weather reports for Metropolitan International Airport indicate clear runways and optimal flight routing conditions for regional and trans-oceanic operations. Flight dispatchers and commercial passenger carriers monitor these bulletins continuously.',
+      category: 'Government / Science',
+      links: ['ks-airport-guide'],
+      educationalRole: 'Authoritative government weather service providing high-prestige unidirectional citation into airport hub.',
+    },
+    {
+      id: 'ks-luggage-gear',
+      url: 'https://www.nomadic-gear-reviews.com/lightweight-carryon',
+      title: 'Nomadic Gear: Ultralight Carry-On Luggage & Packing Guides',
+      headings: [
+        'Carry-On Dimensions & Restrictions',
+        'Tested Travel Bags',
+        'Packing Strategies',
+      ],
+      metaDescription:
+        'Tested reviews of durable carry-on bags and luggage weight limitations for international airline travel.',
+      content:
+        'Traveling light is the secret to stress-free journeying. Avoid expensive excess baggage fees charged by commercial airlines like SkyWings by adhering to strict carry-on measurements. For budget travel planning advice, see our friends at The Budget Backpacker and the Global Travel Insider guide.',
+      category: 'Travel / Gear',
+      links: ['ks-budget-backpacker', 'ks-authentic', 'ks-airline-hub'],
+      educationalRole: 'Consumer lifestyle blog creating natural interlinks across travel blogs and editorial hubs.',
+    },
   ],
 };
 

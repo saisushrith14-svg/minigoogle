@@ -39,13 +39,13 @@ export const authorityProblemDataset: Dataset = {
       title: 'Cancer Research: How Targeted Therapy Is Changing Treatment',
       headings: [
         'Cancer Research Enters the Targeted Therapy Era',
-        'How Precision Oncology Selects Treatments',
-        'Clinical Trials and Patient Outcomes',
+        'Precision Oncology and Cancer Research Advances',
+        'Cancer Research Clinical Trials and Patient Outcomes',
       ],
       metaDescription:
         'A detailed review of cancer research into targeted therapy, precision oncology, biomarkers, and clinical trial outcomes.',
       content:
-        'Modern cancer research increasingly focuses on targeted therapy rather than broad chemotherapy. Precision oncology analyzes tumor biomarkers to select drugs that interrupt specific molecular pathways. This cancer research review explains how clinicians match patients to clinical trials, how resistance emerges, and why combination therapy often produces durable responses. The article summarizes peer-reviewed oncology evidence and links to the university laboratory conducting the underlying experiments.',
+        'Modern cancer research increasingly focuses on targeted therapy rather than broad chemotherapy. Precision oncology analyzes tumor biomarkers to select drugs that interrupt specific molecular pathways. This cancer research review explains how clinicians match patients to clinical trials, how resistance emerges, and why combination therapy often produces durable responses. The article summarizes peer-reviewed oncology evidence and links to the university laboratory conducting the underlying cancer research experiments.',
       category: 'Medicine / Research Article',
       links: ['ap-oncology-lab', 'ap-library', 'ap-university-home'],
       educationalRole: 'Highly relevant, topically focused article with comparatively few inbound links.',
@@ -79,12 +79,12 @@ export const authorityProblemDataset: Dataset = {
     {
       id: 'ap-oncology-lab',
       url: 'https://www.northfield-university.edu/medicine/oncology-laboratory',
-      title: 'Oncology Laboratory: Precision Cancer Research',
-      headings: ['Laboratory Overview', 'Active Cancer Research Projects', 'Translational Oncology'],
+      title: 'Oncology Laboratory: Precision Oncology Investigations',
+      headings: ['Laboratory Overview', 'Active Biomedical Research Projects', 'Translational Oncology'],
       metaDescription:
         'The Northfield oncology laboratory studies tumor biology, biomarkers, and precision cancer therapies.',
       content:
-        'The oncology laboratory investigates tumor genetics, biomarker discovery, and resistance to targeted therapy. Current cancer research projects span lung, breast, and colorectal malignancies. The laboratory collaborates with clinical teams to translate findings into early-phase trials.',
+        'The oncology laboratory investigates tumor genetics, biomarker discovery, and resistance to targeted therapy. Current lab projects span lung, breast, and colorectal malignancies. The laboratory collaborates with clinical teams to translate findings into early-phase trials.',
       category: 'Medicine / Laboratory',
       links: ['ap-cancer-article', 'ap-university-home', 'ap-research-news'],
       educationalRole: 'Topical laboratory page that reinforces the deep article with editorial links.',
@@ -127,6 +127,125 @@ export const authorityProblemDataset: Dataset = {
       category: 'University / Athletics',
       links: ['ap-university-home', 'ap-alumni'],
       educationalRole: 'Unrelated but legitimate page that strengthens the homepage authority signal.',
+    },
+    {
+      id: 'ap-medical-school',
+      url: 'https://www.northfield-university.edu/medschool',
+      title: 'Northfield School of Medicine: Graduate Clinical Programs',
+      headings: [
+        'Medical Education',
+        'Clinical Residency Programs',
+        'Biomedical Laboratories',
+      ],
+      metaDescription:
+        'Graduate medical training, clinical clerkships, and physician education at Northfield University.',
+      content:
+        'The Northfield School of Medicine trains compassionate physicians and leading clinician-scientists. Medical students participate in clinical rotations across partner teaching hospitals while conducting lab investigations in cellular oncology.',
+      category: 'University / Medicine',
+      links: ['ap-university-home', 'ap-oncology-lab', 'ap-cancer-article'],
+      educationalRole: 'Academic medical unit linking to both the university homepage and the oncology laboratory.',
+    },
+    {
+      id: 'ap-hospital-network',
+      url: 'https://www.northfield-health-system.org/hospitals',
+      title: 'Northfield Academic Health System: Patient Care & Specialty Clinics',
+      headings: [
+        'Specialty Care Clinics',
+        'Patient Appointments',
+        'Academic Affiliation',
+      ],
+      metaDescription:
+        'Premier regional healthcare network affiliated with Northfield University medical researchers.',
+      content:
+        'The Northfield Health System operates regional hospitals and outpatient specialty clinics. In partnership with Northfield University medical school faculty, our doctors provide advanced therapeutic treatment and patient care.',
+      category: 'Healthcare / Clinical',
+      links: ['ap-university-home', 'ap-medical-school'],
+      educationalRole: 'Major regional hospital network channeling clinical domain authority back into the main university portal.',
+    },
+    {
+      id: 'ap-biology-dept',
+      url: 'https://www.northfield-university.edu/academics/biology',
+      title: 'Department of Molecular & Cellular Biology - Northfield University',
+      headings: [
+        'Undergraduate Biology',
+        'Molecular Genetics',
+        'Faculty Research Groups',
+      ],
+      metaDescription:
+        'Undergraduate and doctoral degrees in genetics, cell physiology, and molecular biology.',
+      content:
+        'The Department of Molecular and Cellular Biology offers rigorous undergraduate and graduate curricula. Faculty labs investigate fundamental mechanisms of DNA replication and cell signaling in collaboration with the oncology lab.',
+      category: 'University / Academics',
+      links: ['ap-university-home', 'ap-oncology-lab'],
+      educationalRole: 'Core academic department reinforcing the university hub and related specialized laboratories.',
+    },
+    {
+      id: 'ap-student-health',
+      url: 'https://www.northfield-university.edu/student-life/health-center',
+      title: 'Student Health & Wellness Center - Northfield University',
+      headings: [
+        'Campus Primary Care',
+        'Counseling Services',
+        'Immunization & Appointments',
+      ],
+      metaDescription:
+        'Comprehensive outpatient wellness and medical services for Northfield University students and staff.',
+      content:
+        'The Student Health Center provides primary healthcare, preventative immunizations, and psychological counseling to all enrolled Northfield University students. For specialty care referrals, consult the campus directory.',
+      category: 'University / Student Services',
+      links: ['ap-university-home', 'ap-directory'],
+      educationalRole: 'Campus life service page routing links directly into the university homepage.',
+    },
+    {
+      id: 'ap-grant-office',
+      url: 'https://www.northfield-university.edu/research/sponsored-grants',
+      title: 'Office of Sponsored Research & Federal Grants - Northfield',
+      headings: [
+        'Grant Administration',
+        'Federal Compliance',
+        'Research Highlights',
+      ],
+      metaDescription:
+        'Support for faculty researchers securing competitive NSF and NIH research grant funding.',
+      content:
+        'The Office of Sponsored Research assists faculty investigators across science and engineering in securing competitive grants. Recent grant milestones are documented on the PNW Research Highlights portal.',
+      category: 'University / Administration',
+      links: ['ap-university-home', 'ap-research-news'],
+      educationalRole: 'Administrative research office elevating institutional research pages.',
+    },
+    {
+      id: 'ap-provost',
+      url: 'https://www.northfield-university.edu/administration/provost',
+      title: 'Office of the Provost and Chief Academic Officer',
+      headings: [
+        'Academic Priorities',
+        'Faculty Governance',
+        'Curricular Initiatives',
+      ],
+      metaDescription:
+        'Executive leadership guiding academic quality, research faculty appointments, and curriculum at Northfield.',
+      content:
+        'The Provost serves as chief academic officer for Northfield University, overseeing colleges, schools, libraries, and university admissions. We foster intellectual discovery across all academic departments.',
+      category: 'University / Governance',
+      links: ['ap-university-home', 'ap-library'],
+      educationalRole: 'High-level institutional governance page linking to central university nodes.',
+    },
+    {
+      id: 'ap-admissions',
+      url: 'https://www.northfield-university.edu/admissions/apply',
+      title: 'Undergraduate and Graduate Admissions - Northfield University',
+      headings: [
+        'Application Deadlines',
+        'Campus Visits & Tours',
+        'Financial Aid & Tuition',
+      ],
+      metaDescription:
+        'Information for prospective undergraduate and graduate students applying to Northfield University.',
+      content:
+        'Explore educational opportunities at Northfield University. Prospective students can schedule a campus visit, connect with current student ambassadors, and learn about academic programs and varsity athletics.',
+      category: 'University / Admissions',
+      links: ['ap-university-home', 'ap-athletics', 'ap-directory'],
+      educationalRole: 'High-traffic prospective student portal directing users to the university homepage.',
     },
   ],
 };

@@ -56,7 +56,7 @@ describe('dataset integrity', () => {
         expect(report.isValid).toBe(true);
         expect(report.brokenLinksCount).toBe(0);
         expect(report.pageCount).toBeGreaterThanOrEqual(6);
-        expect(report.pageCount).toBeLessThanOrEqual(15);
+        expect(report.pageCount).toBeLessThanOrEqual(30);
       });
 
       it('has unique page IDs and valid URLs', () => {

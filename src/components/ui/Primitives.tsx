@@ -11,7 +11,7 @@ export function Card({ className, children, ...props }: HTMLAttributes<HTMLDivEl
   return (
     <div
       className={cn(
-        'rounded-2xl border border-slate-200 bg-white shadow-sm shadow-slate-200/50',
+        'border border-[#808080] bg-white p-3 text-black font-sans',
         className,
       )}
       {...props}
@@ -35,28 +35,30 @@ export function SectionHeading({
   readonly className?: string;
 }) {
   return (
-    <div className={cn('flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between', className)}>
-      <div className="max-w-3xl">
-        {eyebrow ? (
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-blue-600">
-            {eyebrow}
-          </p>
-        ) : null}
-        <h1 className="text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">{title}</h1>
-        {description ? <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p> : null}
+    <div className={cn('mb-4 pb-2 border-b border-[#808080]', className)}>
+      <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-2">
+        <div>
+          {eyebrow ? (
+            <div className="text-[11px] font-bold font-mono uppercase tracking-wider text-[#0000CC] mb-0.5">
+              {eyebrow}
+            </div>
+          ) : null}
+          <h1 className="text-xl font-bold font-serif text-black leading-tight">{title}</h1>
+          {description ? <p className="mt-1 text-xs text-[#555555] font-sans">{description}</p> : null}
+        </div>
+        {actions ? <div className="flex shrink-0 flex-wrap gap-2 mt-2 sm:mt-0">{actions}</div> : null}
       </div>
-      {actions ? <div className="flex shrink-0 flex-wrap gap-2">{actions}</div> : null}
     </div>
   );
 }
 
 const BADGE_VARIANTS = {
-  neutral: 'bg-slate-100 text-slate-700 ring-slate-200',
-  blue: 'bg-blue-50 text-blue-700 ring-blue-200',
-  green: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
-  amber: 'bg-amber-50 text-amber-800 ring-amber-200',
-  red: 'bg-rose-50 text-rose-700 ring-rose-200',
-  violet: 'bg-violet-50 text-violet-700 ring-violet-200',
+  neutral: 'border-[#808080] bg-[#EEEEEE] text-black',
+  blue: 'border-[#0000CC] bg-[#E5ECF9] text-[#0000CC]',
+  green: 'border-[#008000] bg-[#EDFFE1] text-[#006000]',
+  amber: 'border-[#D0A600] bg-[#FFFFE0] text-[#745B00]',
+  red: 'border-[#BC0000] bg-[#FFF0F0] text-[#BC0000]',
+  violet: 'border-[#00008B] bg-[#E0E0FF] text-[#00008B]',
 } as const;
 
 export function Badge({
@@ -71,7 +73,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset',
+        'inline-flex items-center gap-1 border px-1.5 py-0.5 text-[11px] font-mono select-none',
         BADGE_VARIANTS[variant],
         className,
       )}
@@ -83,18 +85,18 @@ export function Badge({
 
 const BUTTON_VARIANTS = {
   primary:
-    'bg-blue-600 text-white hover:bg-blue-700 focus-visible:outline-blue-600 disabled:bg-blue-300',
+    'bg-[#EFEFEF] text-black border-2 border-t-white border-l-white border-r-[#808080] border-b-[#808080] active:border-t-[#808080] active:border-l-[#808080] active:border-r-white active:border-b-white hover:bg-[#E5E5E5]',
   secondary:
-    'border border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50 focus-visible:outline-slate-500 disabled:text-slate-400',
-  ghost: 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-slate-500',
-  dark: 'bg-slate-900 text-white hover:bg-slate-800 focus-visible:outline-slate-900 disabled:bg-slate-400',
-  danger: 'bg-rose-600 text-white hover:bg-rose-700 focus-visible:outline-rose-600',
+    'bg-[#EFEFEF] text-black border-2 border-t-white border-l-white border-r-[#808080] border-b-[#808080] active:border-t-[#808080] active:border-l-[#808080] active:border-r-white active:border-b-white hover:bg-[#E5E5E5]',
+  ghost: 'text-[#0000CC] underline hover:text-[#CC0000] bg-transparent border-0',
+  dark: 'bg-[#EFEFEF] font-bold text-black border-2 border-t-white border-l-white border-r-[#808080] border-b-[#808080] active:border-t-[#808080] active:border-l-[#808080] active:border-r-white active:border-b-white hover:bg-[#E5E5E5]',
+  danger: 'bg-[#FFF0F0] text-[#BC0000] border-2 border-[#BC0000] hover:bg-[#FFE5E5]',
 } as const;
 
 const BUTTON_SIZES = {
-  sm: 'px-3 py-1.5 text-xs',
-  md: 'px-4 py-2 text-sm',
-  lg: 'px-5 py-2.5 text-sm',
+  sm: 'px-2 py-0.5 text-xs',
+  md: 'px-3 py-1 text-xs',
+  lg: 'px-4 py-1.5 text-sm',
 } as const;
 
 export function Button({
@@ -111,7 +113,7 @@ export function Button({
     <button
       type="button"
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed',
+        'inline-flex items-center justify-center gap-1 font-sans cursor-pointer select-none disabled:opacity-50 disabled:cursor-not-allowed',
         BUTTON_VARIANTS[variant],
         BUTTON_SIZES[size],
         className,
@@ -145,16 +147,16 @@ export function Slider({
   readonly disabled?: boolean;
 }) {
   return (
-    <label className={cn('block', disabled && 'opacity-60')}>
-      <span className="flex items-baseline justify-between gap-3">
-        <span className="text-sm font-medium text-slate-700">{label}</span>
-        <span className="font-mono text-xs font-semibold text-slate-500">
+    <label className={cn('block font-sans', disabled && 'opacity-60')}>
+      <span className="flex items-baseline justify-between gap-2 text-xs">
+        <span className="font-bold text-black">{label}</span>
+        <span className="font-mono text-xs text-[#0000CC] font-bold">
           {formatValue ? formatValue(value) : value}
         </span>
       </span>
       <input
         type="range"
-        className="mt-2 h-1.5 w-full cursor-pointer appearance-none rounded-full bg-slate-200 accent-blue-600 disabled:cursor-not-allowed"
+        className="mt-1 w-full cursor-pointer accent-[#0000CC]"
         min={min}
         max={max}
         step={step}
@@ -162,7 +164,7 @@ export function Slider({
         onChange={(event) => onChange(Number(event.target.value))}
         disabled={disabled}
       />
-      {hint ? <span className="mt-1 block text-xs leading-5 text-slate-500">{hint}</span> : null}
+      {hint ? <span className="mt-0.5 block text-[11px] text-[#555555]">{hint}</span> : null}
     </label>
   );
 }
@@ -181,27 +183,24 @@ export function MetricCard({
   readonly tone?: 'blue' | 'green' | 'amber' | 'violet' | 'slate';
 }) {
   const tones = {
-    blue: 'bg-blue-50 text-blue-600',
-    green: 'bg-emerald-50 text-emerald-600',
-    amber: 'bg-amber-50 text-amber-600',
-    violet: 'bg-violet-50 text-violet-600',
-    slate: 'bg-slate-100 text-slate-600',
+    blue: 'border-[#0000CC] bg-[#F8F9FA]',
+    green: 'border-[#008000] bg-[#F8FFF8]',
+    amber: 'border-[#D0A600] bg-[#FFFFF0]',
+    violet: 'border-[#00008B] bg-[#F8F8FF]',
+    slate: 'border-[#808080] bg-[#FFFFFF]',
   } as const;
+
   return (
-    <Card className="p-4 sm:p-5">
-      <div className="flex items-start justify-between gap-3">
+    <div className={cn('border p-3 text-black font-sans', tones[tone])}>
+      <div className="flex items-start justify-between gap-2">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{label}</p>
-          <p className="mt-2 text-2xl font-bold tracking-tight text-slate-950">{value}</p>
-          {helper ? <p className="mt-1 text-xs text-slate-500">{helper}</p> : null}
+          <p className="text-[11px] font-bold uppercase tracking-wider text-[#555555]">{label}</p>
+          <p className="mt-1 text-xl font-bold font-serif text-black">{value}</p>
+          {helper ? <p className="mt-0.5 text-[11px] text-[#666666]">{helper}</p> : null}
         </div>
-        {icon ? (
-          <div className={cn('rounded-xl p-2', tones[tone])} aria-hidden="true">
-            {icon}
-          </div>
-        ) : null}
+        {icon ? <div className="text-black text-sm" aria-hidden="true">{icon}</div> : null}
       </div>
-    </Card>
+    </div>
   );
 }
 
@@ -217,11 +216,11 @@ export function EmptyState({
   readonly icon?: ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50/70 px-6 py-12 text-center">
-      {icon ? <div className="mb-3 text-slate-400">{icon}</div> : null}
-      <h3 className="text-sm font-semibold text-slate-800">{title}</h3>
-      <p className="mt-1 max-w-md text-sm text-slate-500">{description}</p>
-      {action ? <div className="mt-4">{action}</div> : null}
+    <div className="flex flex-col items-center justify-center border border-dashed border-[#808080] bg-[#FAFAFA] p-6 text-center font-sans">
+      {icon ? <div className="mb-2 text-[#808080]">{icon}</div> : null}
+      <h3 className="text-sm font-bold text-black">{title}</h3>
+      <p className="mt-1 max-w-md text-xs text-[#555555]">{description}</p>
+      {action ? <div className="mt-3">{action}</div> : null}
     </div>
   );
 }
@@ -236,7 +235,7 @@ export function Formula({
   return (
     <div
       className={cn(
-        'overflow-x-auto rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 font-serif text-[15px] leading-7 text-slate-800',
+        'overflow-x-auto border border-[#808080] bg-[#EEEEEE] p-3 font-serif text-sm leading-normal text-black',
         className,
       )}
     >
@@ -253,12 +252,12 @@ export function InfoNote({
   readonly tone?: 'blue' | 'amber' | 'green';
 }) {
   const tones = {
-    blue: 'border-blue-200 bg-blue-50 text-blue-900',
-    amber: 'border-amber-200 bg-amber-50 text-amber-900',
-    green: 'border-emerald-200 bg-emerald-50 text-emerald-900',
+    blue: 'border-[#7F9DB9] bg-[#E5ECF9] text-[#00006E]',
+    amber: 'border-[#D0A600] bg-[#FFFFE0] text-[#4F3D00]',
+    green: 'border-[#008000] bg-[#EDFFE1] text-[#002200]',
   } as const;
   return (
-    <div className={cn('rounded-xl border px-4 py-3 text-sm leading-6', tones[tone])}>
+    <div className={cn('border p-2.5 text-xs leading-normal font-sans', tones[tone])}>
       {children}
     </div>
   );
@@ -271,10 +270,7 @@ export function Select({
 }: SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
-      className={cn(
-        'rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100',
-        className,
-      )}
+      className={cn('select-retro', className)}
       {...props}
     >
       {children}
@@ -285,10 +281,7 @@ export function Select({
 export function TextInput({ className, ...props }: InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
-      className={cn(
-        'w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100',
-        className,
-      )}
+      className={cn('input-retro', className)}
       {...props}
     />
   );
