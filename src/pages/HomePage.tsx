@@ -5,15 +5,26 @@ import { useApp } from '../state/AppContext';
 import { RetroLogo } from '../components/common/RetroLogo';
 import { MODE_DESCRIPTIONS, MODE_LABELS, SCENARIO_LABELS, formatScore } from '../utils/format';
 
-const CURIOUS_QUERIES = [
-  'Stanford University computer science',
-  'The PageRank Citation Ranking: Bringing Order to the Web',
-  'DEC AlphaServer 4100 Stanford backrub crawler',
-  'cheap flights',
-  'cancer research',
-  'sourdough starter guide',
-  'machine learning',
+const CURIOUS_QUERIES: readonly { query: string; datasetId: string }[] = [
+  { query: 'Stanford University computer science', datasetId: 'scientific-network' },
+  { query: 'black holes', datasetId: 'scientific-network' },
+  { query: 'cheap flights', datasetId: 'keyword-stuffing' },
+  { query: 'cancer treatments', datasetId: 'authority-problem' },
+  { query: 'sourdough starter guide', datasetId: 'new-website' },
+  { query: 'online casino bonus', datasetId: 'link-farm' },
+  { query: 'climate change solutions', datasetId: 'relevance-vs-popularity' },
+  { query: 'The PageRank Citation Ranking: Bringing Order to the Web', datasetId: 'scientific-network' },
 ];
+
+export const HOMEPAGE_EXAMPLE_SEARCHES = [
+  { label: '🔭 black holes', query: 'black holes', datasetId: 'scientific-network' },
+  { label: '🎓 Stanford CS', query: 'Stanford University computer science', datasetId: 'scientific-network' },
+  { label: '✈️ cheap flights', query: 'cheap flights', datasetId: 'keyword-stuffing' },
+  { label: '🏥 cancer treatments', query: 'cancer treatments', datasetId: 'authority-problem' },
+  { label: '🥖 sourdough starter', query: 'sourdough starter guide', datasetId: 'new-website' },
+  { label: '🎰 online casino', query: 'online casino bonus', datasetId: 'link-farm' },
+  { label: '🌍 climate solutions', query: 'climate change solutions', datasetId: 'relevance-vs-popularity' },
+] as const;
 
 const MODES: readonly RankingMode[] = ['keyword', 'pagerank', 'hybrid', 'experimental'];
 
@@ -22,8 +33,9 @@ export function HomePage() {
     dataset,
     datasets,
     setDatasetId,
+    switchDatasetAndQuery,
+    detectDatasetForQuery,
     query,
-    setQuery,
     mode,
     setMode,
     comparison,
@@ -38,15 +50,22 @@ export function HomePage() {
   const handleSearch = (e?: FormEvent) => {
     if (e) e.preventDefault();
     const q = inputVal.trim() || dataset.defaultQuery || 'Stanford University computer science';
-    setQuery(q);
+    const targetDatasetId = detectDatasetForQuery(q);
+    switchDatasetAndQuery(targetDatasetId, q);
     navigate(`/search?q=${encodeURIComponent(q)}`);
   };
 
   const handleFeelingCurious = () => {
     const pick = CURIOUS_QUERIES[Math.floor(Math.random() * CURIOUS_QUERIES.length)];
-    setInputVal(pick);
-    setQuery(pick);
-    navigate(`/search?q=${encodeURIComponent(pick)}`);
+    setInputVal(pick.query);
+    switchDatasetAndQuery(pick.datasetId, pick.query);
+    navigate(`/search?q=${encodeURIComponent(pick.query)}`);
+  };
+
+  const handleQuickSearch = (targetDatasetId: string, targetQuery: string) => {
+    setInputVal(targetQuery);
+    switchDatasetAndQuery(targetDatasetId, targetQuery);
+    navigate(`/search?q=${encodeURIComponent(targetQuery)}`);
   };
 
   const handleSubscribe = (e: FormEvent) => {
@@ -246,7 +265,7 @@ export function HomePage() {
           </p>
 
           {/* Algorithm Mode Radio Selector */}
-          <div className="p-1 bg-white text-xs text-black flex items-center justify-center space-x-3 mb-3">
+          <div className="p-1 bg-white text-xs text-black flex items-center justify-center space-x-3 mb-2">
             <span className="font-bold">Algorithm:</span>
             <label className="cursor-pointer inline-flex items-center space-x-1">
               <input
@@ -283,6 +302,21 @@ export function HomePage() {
               <span>Hybrid</span>
             </label>
           </div>
+
+          {/* Quick Example Searches */}
+          <div className="flex flex-wrap items-center justify-center gap-1.5 mb-3 text-xs">
+            <span className="font-bold text-[#555555]">Try searches:</span>
+            {HOMEPAGE_EXAMPLE_SEARCHES.map((item) => (
+              <button
+                key={item.query}
+                type="button"
+                onClick={() => handleQuickSearch(item.datasetId, item.query)}
+                className="px-2 py-0.5 bg-white border border-[#7F9DB9] hover:bg-[#E5ECF9] text-[#0000CC] cursor-pointer text-xs"
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
         </form>
 
         {/* 1998 Feature Container: About MiniGoogle! */}
@@ -296,13 +330,21 @@ export function HomePage() {
             </Link>
           </div>
           <div className="text-xs text-black mb-3 space-x-2">
-            <Link to="/datasets" className="text-[#0000CC] underline">
+            <button
+              type="button"
+              onClick={() => handleQuickSearch('scientific-network', 'Stanford University computer science')}
+              className="text-[#0000CC] underline bg-transparent border-0 p-0 cursor-pointer text-xs"
+            >
               Stanford Search
-            </Link>
+            </button>
             <span>|</span>
-            <Link to="/datasets" className="text-[#0000CC] underline">
-              Linux Search
-            </Link>
+            <button
+              type="button"
+              onClick={() => handleQuickSearch('scientific-network', 'black holes')}
+              className="text-[#0000CC] underline bg-transparent border-0 p-0 cursor-pointer text-xs"
+            >
+              Astrophysics Search
+            </button>
             <span>|</span>
             <Link to="/learn" className="text-[#0000CC] underline">
               Why PageRank Works

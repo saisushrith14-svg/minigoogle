@@ -7,7 +7,14 @@ export const scientificNetworkDataset: Dataset = {
     'A citation network around the original PageRank paper. Later papers cite the seminal work, surveys cite both foundations and applications, and a lab page links to its own publications. This is the cleanest demonstration of link authority as scholarly prestige.',
   scenario: 'scientific-network',
   defaultQuery: 'pagerank citation analysis',
-  testQueries: ['pagerank citation analysis', 'link analysis survey', 'bibliometrics', 'graph theory web search'],
+  testQueries: [
+    'pagerank citation analysis',
+    'black holes',
+    'Stanford University computer science',
+    'link analysis survey',
+    'bibliometrics',
+    'graph theory web search',
+  ],
   keyPageIds: ['sn-pagerank-paper', 'sn-citation-review'],
   educationalNotes:
     'The seminal PageRank paper accumulates citations from every part of the network, so PageRank and relevance agree strongly. The citation review is the second authority. Compare this with the authority-problem dataset where hub authority and topical relevance diverge.',
@@ -197,7 +204,7 @@ export const scientificNetworkDataset: Dataset = {
       content:
         'The World Wide Web was conceived at CERN to allow high-energy physics researchers across institutes to share and link documentation transparently. The resulting decentralized directed hyperlink topology became the foundational graph upon which hypertextual search engines operate.',
       category: 'History / Architecture',
-      links: ['sn-web-survey', 'sn-pagerank-paper'],
+      links: ['sn-web-survey', 'sn-pagerank-paper', 'sn-nasa-astrophysics'],
       educationalRole: 'Historical architectural anchor documenting the origin of the World Wide Web citation graph.',
     },
     {
@@ -231,7 +238,7 @@ export const scientificNetworkDataset: Dataset = {
       content:
         'The MIT Information Systems group investigates autonomous web harvesting and machine learning architectures for information extraction. Our graduate syllabus references foundational literature on hypertextual web retrieval, including the Stanford PageRank algorithm.',
       category: 'University / Laboratory',
-      links: ['sn-pagerank-paper', 'sn-kleinberg-paper', 'sn-author-profile'],
+      links: ['sn-pagerank-paper', 'sn-kleinberg-paper', 'sn-author-profile', 'sn-stanford-cs'],
       educationalRole: 'Major university AI research lab citing Stanford and Cornell link ranking papers.',
     },
     {
@@ -248,8 +255,102 @@ export const scientificNetworkDataset: Dataset = {
       content:
         'The Berkeley Information School conducts fundamental investigations into probabilistic retrieval models and search evaluation. Faculty members frequently collaborate with the Stanford InfoLab and reference Page & Brin’s classic web architecture papers in graduate seminars.',
       category: 'University / Research Group',
-      links: ['sn-lab-page', 'sn-author-profile', 'sn-pagerank-paper'],
+      links: ['sn-lab-page', 'sn-author-profile', 'sn-pagerank-paper', 'sn-stanford-cs'],
       educationalRole: 'Peer academic research group providing institutional citation weight into the Stanford paper and lab.',
+    },
+    {
+      id: 'sn-stanford-cs',
+      url: 'https://www-cs.stanford.edu/research/infolab',
+      title: 'Stanford University Computer Science Department',
+      headings: [
+        'Stanford Computer Science',
+        'InfoLab Web Research & PageRank Origins',
+        'Digital Library Project',
+        'Faculty & Graduate Directory',
+      ],
+      metaDescription:
+        'The Computer Science Department at Stanford University. Home of the Stanford InfoLab, Larry Page, Sergey Brin, and foundational web search algorithms.',
+      content:
+        'The Stanford University Computer Science Department conducts groundbreaking research in systems, artificial intelligence, and database architectures. In the William Gates Computer Science Building, graduate research on the Stanford Digital Libraries Project led to the development of the BackRub crawler and the PageRank citation algorithm. Stanford CS researchers maintain close collaborative links with the Stanford Kavli Astrophysics Institute, CERN, and international computing centers.',
+      category: 'University / Academic Department',
+      links: ['sn-pagerank-paper', 'sn-mit-ai-lab', 'sn-berkeley-ir', 'sn-stanford-astrophysics'],
+      publishedDate: '1998-04-14',
+      educationalRole: 'High-authority Stanford University hub page where PageRank was invented.',
+    },
+    {
+      id: 'sn-nasa-astrophysics',
+      url: 'https://heasarc.gsfc.nasa.gov/docs/objects/black_holes.html',
+      title: 'NASA High Energy Astrophysics Science Archive: Black Holes',
+      headings: [
+        'Observational Evidence for Black Holes',
+        'Supermassive Black Holes at Galactic Centers',
+        'Chandra X-Ray Observatory & Hubble Data',
+        'Relativistic Accretion Disks',
+      ],
+      metaDescription:
+        'NASA archival research data on stellar and supermassive black holes, Chandra X-ray Observatory observations, and event horizons.',
+      content:
+        'The NASA High Energy Astrophysics Science Archive Research Center provides observational telemetry on black holes and high-energy galactic phenomena. Orbital X-ray spectroscopy from the Chandra X-ray Observatory and the Hubble Space Telescope allows astrophysicists to analyze relativistic accretion disks, gravitational lensing, and event horizons surrounding supermassive black holes. Research at NASA integrates theoretical physics models from Cambridge and Stanford.',
+      category: 'Government / Space & Astrophysics',
+      links: ['sn-hawking-physics', 'sn-stanford-astrophysics', 'sn-cern-archive'],
+      publishedDate: '2001-11-20',
+      educationalRole: 'Definitive government space agency scientific portal on black holes with high authority.',
+    },
+    {
+      id: 'sn-hawking-physics',
+      url: 'https://www.damtp.cam.ac.uk/research/gr/blackholes/thermodynamics.html',
+      title: 'Cambridge DAMTP: Black Hole Thermodynamics & Quantum Gravity',
+      headings: [
+        'Black Hole Mechanics and Thermodynamics',
+        'Hawking Radiation & Event Horizons',
+        'Gravitational Singularity Theorems',
+        'Cambridge Relativity & Cosmology Group',
+      ],
+      metaDescription:
+        'Academic research by Stephen Hawking and colleagues on black hole mechanics, thermodynamic entropy, and quantum radiation.',
+      content:
+        'The Cambridge Department of Applied Mathematics and Theoretical Physics conducts fundamental research on black holes and quantum gravity. Pioneering theorems established that black holes possess thermodynamic entropy proportional to event horizon area and emit Hawking radiation. Modern astrophysicists cross-reference these Cambridge mathematical proofs with observational datasets collected by NASA and academic observatories.',
+      category: 'University / Theoretical Physics',
+      links: ['sn-nasa-astrophysics', 'sn-stanford-astrophysics', 'sn-cern-archive'],
+      publishedDate: '2003-08-15',
+      educationalRole: 'Foundational academic theoretical physics page on black hole mechanics.',
+    },
+    {
+      id: 'sn-stanford-astrophysics',
+      url: 'https://kipac.stanford.edu/research/black-holes-and-relativistic-astrophysics',
+      title: 'Stanford Kavli Institute: Black Holes & Relativistic Astrophysics',
+      headings: [
+        'Stanford Astrophysics Research',
+        'Supermassive Black Holes & Active Galactic Nuclei',
+        'Computational Relativistic Simulations',
+        'Joint NASA Science Working Groups',
+      ],
+      metaDescription:
+        'Stanford University astrophysics institute investigating supermassive black holes, relativistic jets, and spacetime curvature.',
+      content:
+        'The Kavli Institute for Particle Astrophysics and Cosmology at Stanford University explores physical processes around black holes. Our computational astrophysics group uses high-performance computing clusters to model extreme gravitational fields and accretion disks around rotating black holes, collaborating closely with NASA Goddard Space Flight Center and Cambridge University theorists.',
+      category: 'University / Space Research',
+      links: ['sn-stanford-cs', 'sn-nasa-astrophysics', 'sn-hawking-physics'],
+      publishedDate: '2006-03-10',
+      educationalRole: 'Stanford astrophysics research center linking computational physics with NASA observational missions.',
+    },
+    {
+      id: 'sn-blackhole-spam',
+      url: 'https://www.black-holes-space-secrets-free.xyz/black-holes',
+      title: 'Free Black Holes Pictures, Black Holes Secrets & Black Holes Facts!',
+      headings: [
+        'Black Holes Black Holes Everywhere',
+        'Top 10 Secret Black Holes Facts',
+        'Free Black Holes Space Wallpaper Downloads',
+      ],
+      metaDescription:
+        'Black holes black holes black holes! Get the best black holes facts, crazy black holes photos, and secret black holes space files here!',
+      content:
+        'Black holes black holes black holes! Are you looking for black holes? We have black holes, awesome black holes, dark black holes, mystery black holes, space black holes, super black holes, giant black holes, cool black holes! Black holes are deep in space. Download free black holes pictures and black holes screensavers today. Read all our black holes trivia, black holes news, black holes guides, and black holes articles. Black holes black holes black holes!',
+      category: 'Web Spam / Doorway Page',
+      links: ['sn-nasa-astrophysics'],
+      publishedDate: '2025-01-01',
+      educationalRole: 'Keyword-stuffed doorway spam page repeating "black holes" to exploit pre-1998 word count algorithms, but demoted by PageRank due to zero reputable incoming links.',
     },
   ],
 };

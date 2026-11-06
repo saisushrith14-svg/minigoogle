@@ -11,6 +11,10 @@ import { RankingControls } from '../components/search/RankingControls';
 export function SearchPage() {
   const {
     dataset,
+    datasets,
+    setDatasetId,
+    switchDatasetAndQuery,
+    detectDatasetForQuery,
     searchResponse,
     keywordWeights,
     query,
@@ -26,11 +30,60 @@ export function SearchPage() {
   );
   const keyPageIds = useMemo(() => new Set(dataset.keyPageIds ?? []), [dataset.keyPageIds]);
 
+  const sampleSearches = [
+    {
+      label: '🔭 black holes',
+      query: 'black holes',
+      datasetId: 'scientific-network',
+      tooltip: 'Space & Astrophysics (NASA, Cambridge, Stanford vs Spam)',
+    },
+    {
+      label: '🎓 Stanford CS',
+      query: 'Stanford University computer science',
+      datasetId: 'scientific-network',
+      tooltip: 'Stanford InfoLab & PageRank Invention',
+    },
+    {
+      label: '✈️ cheap flights',
+      query: 'cheap flights',
+      datasetId: 'keyword-stuffing',
+      tooltip: 'Travel Deals vs Doorway Spammers',
+    },
+    {
+      label: '🏥 cancer treatments',
+      query: 'cancer treatments',
+      datasetId: 'authority-problem',
+      tooltip: 'Oncology Journal vs Hospital Homepages',
+    },
+    {
+      label: '🥖 sourdough starter',
+      query: 'sourdough starter guide',
+      datasetId: 'new-website',
+      tooltip: 'Artisan Baking: High Quality New Site',
+    },
+    {
+      label: '🎰 online casino',
+      query: 'online casino bonus',
+      datasetId: 'link-farm',
+      tooltip: 'Gambling Commission vs Syndicated Link Farms',
+    },
+    {
+      label: '🌍 climate solutions',
+      query: 'climate change solutions',
+      datasetId: 'relevance-vs-popularity',
+      tooltip: 'IPCC Climate Solutions vs Popular News Portals',
+    },
+  ];
+
   const handleSearchSubmit = (e: FormEvent) => {
     e.preventDefault();
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    const bestDatasetId = detectDatasetForQuery(trimmed);
+    if (bestDatasetId !== dataset.id) {
+      switchDatasetAndQuery(bestDatasetId, trimmed);
+    }
   };
-
-  const sampleQueries = ['black holes', 'cheap flights', 'cancer treatments', 'stanford university'];
 
   return (
     <div className="w-full flex flex-col font-sans text-black">
@@ -51,14 +104,19 @@ export function SearchPage() {
         </div>
         <div className="mt-2 pt-2 border-t border-[#D0DDF5] flex flex-wrap items-center gap-1.5 text-xs">
           <span className="font-bold text-[#555555]">Try example searches:</span>
-          {sampleQueries.map((q) => (
+          {sampleSearches.map((s) => (
             <button
-              key={q}
+              key={s.query}
               type="button"
-              onClick={() => setQuery(q)}
-              className="px-2 py-0.5 bg-white border border-[#7F9DB9] hover:bg-[#E5ECF9] text-[#0000CC] cursor-pointer"
+              title={s.tooltip}
+              onClick={() => switchDatasetAndQuery(s.datasetId, s.query)}
+              className={`px-2 py-0.5 border cursor-pointer text-xs ${
+                query.toLowerCase() === s.query.toLowerCase()
+                  ? 'bg-[#0000CC] text-white border-[#0000CC] font-bold'
+                  : 'bg-white border-[#7F9DB9] hover:bg-[#E5ECF9] text-[#0000CC]'
+              }`}
             >
-              "{q}"
+              {s.label}
             </button>
           ))}
         </div>
@@ -111,12 +169,29 @@ export function SearchPage() {
         style={{ borderTop: '1px solid #7F9DB9', borderBottom: '1px solid #7F9DB9' }}
       >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-1">
-          <div>
-            Searched the web for <b>{query || 'empty query'}</b>.{' '}
-            <span className="text-[#555555]">
-              Results 1 - {searchResponse.results.length} of {dataset.pages.length}. Search took{' '}
-              <b>0.04</b> seconds.
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span>
+              Searched <b>{dataset.name.replace(/^Scenario \d+: /, '')}</b> for <b>"{query || 'empty query'}"</b>.
             </span>
+            <span className="text-[#555555]">
+              ({searchResponse.results.length} of {dataset.pages.length} pages matched in <b>0.04</b>s)
+            </span>
+            <span className="text-[#888888]">|</span>
+            <label className="text-[11px] text-[#555555] flex items-center gap-1">
+              <span>Collection:</span>
+              <select
+                aria-label="Active web collection"
+                value={dataset.id}
+                onChange={(e) => setDatasetId(e.target.value)}
+                className="select-retro text-[11px] py-0 px-1 bg-white border border-[#7F9DB9]"
+              >
+                {datasets.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name.replace(/^Scenario \d+: /, '')} ({d.pages.length} pages)
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
           <div className="flex items-center space-x-1 whitespace-nowrap">
             <span className="text-[#555555]">Model:</span>
@@ -209,8 +284,25 @@ export function SearchPage() {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-6">
         <div className="space-y-4">
           {searchResponse.results.length === 0 ? (
-            <div className="p-8 text-center border border-dashed border-[#808080] text-xs text-[#555555]">
-              No documents matched the query in this dataset.
+            <div className="p-6 text-center border border-dashed border-[#808080] bg-[#FAF8F5] text-xs text-[#555555] space-y-3">
+              <div className="font-bold text-sm text-black">
+                No webpages in "{dataset.name.replace(/^Scenario \d+: /, '')}" matched "{query}".
+              </div>
+              <p className="max-w-md mx-auto text-[#666666]">
+                This simulated collection contains {dataset.pages.length} specific pages. Try one of our curated sample searches below to see real ranking algorithms in action:
+              </p>
+              <div className="flex flex-wrap justify-center gap-2 pt-1">
+                {sampleSearches.map((s) => (
+                  <button
+                    key={s.query}
+                    type="button"
+                    onClick={() => switchDatasetAndQuery(s.datasetId, s.query)}
+                    className="btn-retro py-1 px-2.5 text-xs font-bold text-[#0000CC]"
+                  >
+                    Search {s.label} »
+                  </button>
+                ))}
+              </div>
             </div>
           ) : (
             searchResponse.results.map((result) => {

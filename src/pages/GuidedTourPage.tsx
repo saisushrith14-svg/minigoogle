@@ -5,7 +5,7 @@ import { RetroLogo } from '../components/common/RetroLogo';
 
 export function GuidedTourPage() {
   const navigate = useNavigate();
-  const { setQuery, setMode, setDatasetId } = useApp();
+  const { setMode, setDatasetId, switchDatasetAndQuery, detectDatasetForQuery } = useApp();
 
   const [step, setStep] = useState<number>(() => {
     try {
@@ -143,7 +143,8 @@ export function GuidedTourPage() {
             <button
               type="button"
               onClick={() => {
-                setQuery(tourQuery);
+                const targetDatasetId = detectDatasetForQuery(tourQuery);
+                switchDatasetAndQuery(targetDatasetId, tourQuery);
                 setMode('keyword');
                 setStep(2);
               }}
@@ -178,11 +179,19 @@ export function GuidedTourPage() {
             </p>
             <div className="border border-[#CC0000] p-2 bg-white font-mono text-[11px]">
               <div className="font-bold text-[#0000CC] underline">
-                [Rank #1 by Old Search] Super Discount Deals: {tourQuery} {tourQuery} {tourQuery}!
+                {tourQuery.toLowerCase().includes('hole')
+                  ? '[Rank #1 by Old Search] Free Black Holes Pictures & Black Holes Secrets!'
+                  : `[Rank #1 by Old Search] Super Discount Deals: ${tourQuery} ${tourQuery} ${tourQuery}!`}
               </div>
-              <div className="text-[#008000]">http://www.cheap-junk-spammer.xyz/deals.html</div>
+              <div className="text-[#008000]">
+                {tourQuery.toLowerCase().includes('hole')
+                  ? 'https://www.black-holes-space-secrets-free.xyz/black-holes'
+                  : 'http://www.cheap-junk-spammer.xyz/deals.html'}
+              </div>
               <div className="text-black mt-1">
-                “{tourQuery} {tourQuery} {tourQuery}. We offer the best {tourQuery} for {tourQuery} lovers…”
+                {tourQuery.toLowerCase().includes('hole')
+                  ? '“Black holes black holes black holes! Are you looking for black holes? We have black holes, super black holes, dark black holes…”'
+                  : `“${tourQuery} ${tourQuery} ${tourQuery}. We offer the best ${tourQuery} for ${tourQuery} lovers…”`}
               </div>
               <div className="mt-1 text-[10px] text-[#CC0000] font-bold">
                 Why this ranked #1: High word count, zero authority.
@@ -312,16 +321,28 @@ export function GuidedTourPage() {
               </div>
               <div className="space-y-2">
                 <div className="p-2 bg-[#FFF0F0] border border-[#CC0000]">
-                  <div className="font-bold text-black">1. Discount Spammer Portal</div>
-                  <div className="text-[10px] text-[#555555]">Repeated words 45 times.</div>
+                  <div className="font-bold text-black">
+                    1. {tourQuery.toLowerCase().includes('hole') ? 'Free Black Holes Pictures Spam' : 'Discount Spammer Portal'}
+                  </div>
+                  <div className="text-[10px] text-[#555555]">
+                    {tourQuery.toLowerCase().includes('hole') ? 'Repeated “black holes” 24 times.' : 'Repeated words 45 times.'}
+                  </div>
                 </div>
                 <div className="p-2 bg-white border border-[#CCCCCC]">
-                  <div className="font-bold text-black">2. Authentic Travel Guide</div>
-                  <div className="text-[10px] text-[#555555]">High quality editorial prose.</div>
+                  <div className="font-bold text-black">
+                    2. {tourQuery.toLowerCase().includes('hole') ? 'NASA Astrophysics Archive (HEASARC)' : 'Authentic Travel Guide'}
+                  </div>
+                  <div className="text-[10px] text-[#555555]">
+                    {tourQuery.toLowerCase().includes('hole') ? 'Chandra X-Ray & Hubble observational data.' : 'High quality editorial prose.'}
+                  </div>
                 </div>
                 <div className="p-2 bg-white border border-[#CCCCCC]">
-                  <div className="font-bold text-black">3. Official Airline Hub</div>
-                  <div className="text-[10px] text-[#555555]">Official flight booking portal.</div>
+                  <div className="font-bold text-black">
+                    3. {tourQuery.toLowerCase().includes('hole') ? 'Cambridge DAMTP Theoretical Physics' : 'Official Airline Hub'}
+                  </div>
+                  <div className="text-[10px] text-[#555555]">
+                    {tourQuery.toLowerCase().includes('hole') ? 'Stephen Hawking black hole thermodynamics.' : 'Official flight booking portal.'}
+                  </div>
                 </div>
               </div>
             </div>
@@ -337,25 +358,29 @@ export function GuidedTourPage() {
               <div className="space-y-2">
                 <div className="p-2 bg-[#E8F0FE] border border-[#0000CC]">
                   <div className="font-bold text-black flex items-center justify-between">
-                    <span>1. Authentic Travel Guide</span>
+                    <span>1. {tourQuery.toLowerCase().includes('hole') ? 'NASA Astrophysics Archive' : 'Authentic Travel Guide'}</span>
                     <span className="text-[#008000] font-bold">▲ Moved Up 1</span>
                   </div>
                   <div className="text-[10px] text-[#008000]">
-                    Linked by universities and consumer bureaus.
+                    {tourQuery.toLowerCase().includes('hole')
+                      ? 'Linked by Cambridge, CERN, and Stanford researchers.'
+                      : 'Linked by universities and consumer bureaus.'}
                   </div>
                 </div>
                 <div className="p-2 bg-[#E8F0FE] border border-[#0000CC]">
                   <div className="font-bold text-black flex items-center justify-between">
-                    <span>2. Official Airline Hub</span>
+                    <span>2. {tourQuery.toLowerCase().includes('hole') ? 'Cambridge DAMTP Physics' : 'Official Airline Hub'}</span>
                     <span className="text-[#008000] font-bold">▲ Moved Up 1</span>
                   </div>
                   <div className="text-[10px] text-[#008000]">
-                    Linked by airport transit authorities.
+                    {tourQuery.toLowerCase().includes('hole')
+                      ? 'Foundational citations in general relativity.'
+                      : 'Linked by airport transit authorities.'}
                   </div>
                 </div>
                 <div className="p-2 bg-[#FFF0F0] border border-[#CC0000]">
                   <div className="font-bold text-black flex items-center justify-between">
-                    <span>3. Discount Spammer Portal</span>
+                    <span>3. {tourQuery.toLowerCase().includes('hole') ? 'Free Black Holes Pictures Spam' : 'Discount Spammer Portal'}</span>
                     <span className="text-[#CC0000] font-bold">▼ Plunged to Bottom</span>
                   </div>
                   <div className="text-[10px] text-[#CC0000]">

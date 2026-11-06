@@ -10,6 +10,7 @@ import {
   compareRankingModes,
   DEFAULT_KEYWORD_WEIGHTS,
   DEFAULT_RANKING_WEIGHTS,
+  detectBestDatasetForQuery,
   rankPages,
   resolveRankingWeights,
   searchDataset,
@@ -44,6 +45,8 @@ export interface AppContextValue {
   readonly dataset: Dataset;
   readonly datasetId: string;
   readonly setDatasetId: (id: string) => void;
+  readonly switchDatasetAndQuery: (id: string, nextQuery?: string) => void;
+  readonly detectDatasetForQuery: (queryText: string) => string;
   readonly query: string;
   readonly setQuery: (query: string) => void;
   readonly mode: RankingMode;
@@ -111,14 +114,23 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
     setIsAdvancedMode(!isAdvancedMode);
   }, [isAdvancedMode, setIsAdvancedMode]);
 
-  const setDatasetId = useCallback((id: string) => {
+  const switchDatasetAndQuery = useCallback((id: string, nextQuery?: string) => {
     const next = getDatasetById(id);
     if (!next) return;
     setDatasetIdState(id);
-    setQuery(next.defaultQuery ?? '');
+    setQuery(nextQuery !== undefined ? nextQuery : (next.defaultQuery ?? ''));
     setSimulation(null);
     setActionFeedback(`Now exploring: ${next.name.replace(/^Scenario \d+: /, '')} (${next.pages.length} webpages)`);
   }, []);
+
+  const setDatasetId = useCallback((id: string) => {
+    switchDatasetAndQuery(id);
+  }, [switchDatasetAndQuery]);
+
+  const detectDatasetForQuery = useCallback(
+    (queryText: string) => detectBestDatasetForQuery(datasets, queryText, datasetId),
+    [datasetId],
+  );
 
   const setKeywordWeight = useCallback(
     (key: keyof KeywordWeights, value: number) => {
@@ -239,6 +251,8 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       dataset,
       datasetId,
       setDatasetId,
+      switchDatasetAndQuery,
+      detectDatasetForQuery,
       query,
       setQuery,
       mode,
@@ -283,6 +297,8 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       searchResponse,
       setActionFeedback,
       setDatasetId,
+      switchDatasetAndQuery,
+      detectDatasetForQuery,
       setHybridSplit,
       setIsAdvancedMode,
       setKeywordWeight,

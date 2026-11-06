@@ -285,4 +285,46 @@ export function compareRankingModes(
   return { query, resultsByMode };
 }
 
+/**
+ * Automatically identifies the best educational dataset for a given search query.
+ * If the current dataset already has pages matching the query, it is preserved.
+ * Otherwise, scans available datasets to find the one with the strongest keyword relevance.
+ */
+export function detectBestDatasetForQuery(
+  allDatasets: readonly Dataset[],
+  queryText: string,
+  currentDatasetId?: string,
+): string {
+  const trimmed = queryText.trim().toLowerCase();
+  if (!trimmed || allDatasets.length === 0) {
+    return currentDatasetId ?? allDatasets[0].id;
+  }
+
+  // 1. If current dataset has matching pages, stay on it
+  if (currentDatasetId) {
+    const current = allDatasets.find((d) => d.id === currentDatasetId);
+    if (current) {
+      const results = rankPages(current.pages, trimmed, { mode: 'keyword' });
+      if (results.some((r) => r.keywordScore > 0)) {
+        return currentDatasetId;
+      }
+    }
+  }
+
+  // 2. Scan all datasets for the highest match score
+  let bestId = currentDatasetId ?? allDatasets[0].id;
+  let maxScore = 0;
+
+  for (const d of allDatasets) {
+    const results = rankPages(d.pages, trimmed, { mode: 'keyword' });
+    const topScore = results.length > 0 ? results[0].keywordScore : 0;
+    if (topScore > maxScore) {
+      maxScore = topScore;
+      bestId = d.id;
+    }
+  }
+
+  return bestId;
+}
+
 export { DEFAULT_KEYWORD_WEIGHTS };

@@ -11,13 +11,20 @@ export function SearchBar({
   readonly autoFocus?: boolean;
   readonly className?: string;
 }) {
-  const { query, setQuery, dataset } = useApp();
+  const { query, setQuery, dataset, switchDatasetAndQuery, detectDatasetForQuery } = useApp();
   const navigate = useNavigate();
   const suggestions = Array.from(
     new Set([dataset.defaultQuery, ...(dataset.testQueries ?? [])].filter(Boolean)),
   ).slice(0, 5) as string[];
 
   const submit = () => {
+    const trimmed = query.trim();
+    if (trimmed) {
+      const targetDatasetId = detectDatasetForQuery(trimmed);
+      if (targetDatasetId !== dataset.id) {
+        switchDatasetAndQuery(targetDatasetId, trimmed);
+      }
+    }
     if (onSearch) onSearch();
     else navigate('/search');
   };
