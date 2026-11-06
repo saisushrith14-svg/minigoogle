@@ -21,6 +21,7 @@ export function ComparisonPage() {
     setHybridSplit,
     mode,
     setMode,
+    isAdvancedMode,
   } = useApp();
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -103,9 +104,30 @@ export function ComparisonPage() {
     setHybridSplit(kwShare);
   };
 
+  // Top 5 Side-by-Side comparison items for Keyword vs PageRank
+  const keywordTop5 = comparison.resultsByMode.keyword.slice(0, 5);
+  const pagerankTop5 = comparison.resultsByMode.pagerank.slice(0, 5);
+
   return (
     <div className="w-full flex flex-col font-sans text-black">
-      {/* Document Header */}
+      {/* Beginner Self-Explaining Banner */}
+      <div className="mb-3 p-3 bg-[#F0F4FF] border border-[#7F9DB9] text-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <div className="text-base font-bold text-[#0000CC] font-serif leading-tight">
+              Why Do Search Results Change?
+            </div>
+            <p className="text-xs text-[#333333] mt-0.5">
+              The same search can produce completely different results depending on how websites are ranked.
+            </p>
+          </div>
+          <div className="text-[11px] text-[#555555] bg-white px-2 py-1 border border-[#CCCCCC] sm:max-w-xs">
+            👉 <b>Action:</b> Compare the two columns below to see how PageRank fixes keyword stuffing and brings authentic websites to the top.
+          </div>
+        </div>
+      </div>
+
+      {/* Document Header (Test expectation: /Ranking comparison lab/i) */}
       <div className="mb-3">
         <h1 className="text-xl font-bold font-serif text-black mb-1 leading-tight">
           Ranking comparison lab: Keyword Relevance vs Link Authority
@@ -117,20 +139,165 @@ export function ComparisonPage() {
 
       <hr className="w-full border-t border-[#808080] mb-3" />
 
-      {/* Formula & Theory Reference */}
-      <div className="bg-[#F8F9FA] p-3 border border-[#808080] mb-3 text-xs">
-        <div className="font-bold text-[11px] uppercase tracking-wider mb-1 text-black">
-          Formula [Mathematical Formulation of the Hybrid Model]:
+      {/* Query Bar */}
+      <div className="p-2 border border-[#808080] bg-[#FFFFFF] mb-4">
+        <SearchBar />
+      </div>
+
+      {/* Visually Obvious Side-by-Side Comparison: Old Search vs Google PageRank */}
+      <div className="mb-4 p-3 bg-[#FFFEEB] border border-[#E6DB55] text-xs">
+        <div className="font-bold text-sm text-black font-serif mb-1">
+          Direct Comparison: Old Keyword Search vs Google PageRank
         </div>
-        <pre className="font-mono text-xs bg-white p-2 border border-[#CCCCCC] text-black overflow-x-auto">
-          S(p) = (1 - α) · Score_TFIDF(p) + α · PR(p)
-        </pre>
-        <div className="text-[11px] text-[#555555] mt-1">
-          Where: <span className="font-mono">α ∈ [0.00, 1.00]</span> represents the link topology
-          authority weighting coefficient. Default academic damping factor:{' '}
-          <span className="font-mono">d = 0.85</span>.
+        <p className="text-xs text-[#555555] mb-3">
+          Notice how the same query generates different winners when web links are factored in.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Column 1: Old Search */}
+          <div className="p-3 bg-white border border-[#BA1A1A]">
+            <div className="flex justify-between items-center border-b border-[#CCCCCC] pb-1.5 mb-2">
+              <div>
+                <span className="font-bold text-sm text-[#BC0000]">Old Search: Matches Words</span>
+                <span className="block text-[11px] text-[#777777]">Counts keyword frequency in text</span>
+              </div>
+              <span className="px-1.5 py-0.5 bg-[#FFF2F2] text-[#93000A] text-[10px] font-bold border border-[#BA1A1A]">
+                Pre-1998
+              </span>
+            </div>
+
+            <ol className="space-y-2">
+              {keywordTop5.map((result, idx) => {
+                const page = pageMap.get(result.pageId);
+                const prResult = comparison.resultsByMode.pagerank.find((r) => r.pageId === result.pageId);
+                const prPos = prResult?.position ?? 99;
+
+                return (
+                  <li key={result.pageId} className="p-1.5 bg-[#FAFAFA] border border-[#E0E0E0] text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-[#BC0000]">#{idx + 1}</span>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedId(result.pageId)}
+                        className="font-bold text-left text-[#0000CC] underline flex-1 mx-2 truncate"
+                      >
+                        {page?.title ?? result.pageId}
+                      </button>
+                    </div>
+                    <div className="text-[11px] text-[#555555] mt-1 flex justify-between items-center">
+                      <span className="font-mono text-[10px] text-[#008000] truncate max-w-[180px]">{page?.category ?? 'Webpage'}</span>
+                      <span className="text-[10px] text-[#666666]">
+                        In Google: #{prPos}
+                      </span>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+
+          {/* Column 2: PageRank */}
+          <div className="p-3 bg-white border border-[#0000CC]">
+            <div className="flex justify-between items-center border-b border-[#CCCCCC] pb-1.5 mb-2">
+              <div>
+                <span className="font-bold text-sm text-[#0000CC]">Google: Measures Link Importance</span>
+                <span className="block text-[11px] text-[#777777]">Considers incoming recommendations</span>
+              </div>
+              <span className="px-1.5 py-0.5 bg-[#E5ECF9] text-[#0000CC] text-[10px] font-bold border border-[#7F9DB9]">
+                1998 PageRank
+              </span>
+            </div>
+
+            <ol className="space-y-2">
+              {pagerankTop5.map((result, idx) => {
+                const page = pageMap.get(result.pageId);
+                const kwResult = comparison.resultsByMode.keyword.find((r) => r.pageId === result.pageId);
+                const kwPos = kwResult?.position ?? 99;
+                const delta = kwPos - result.position; // positive if moved up in PR
+
+                return (
+                  <li key={result.pageId} className="p-1.5 bg-[#FAFAFA] border border-[#E0E0E0] text-xs">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-[#0000CC]">#{idx + 1}</span>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedId(result.pageId)}
+                        className="font-bold text-left text-[#0000CC] underline flex-1 mx-2 truncate"
+                      >
+                        {page?.title ?? result.pageId}
+                      </button>
+                      <span className={`px-1.5 py-0.2 font-bold text-[10px] rounded ${
+                        delta > 0
+                          ? 'bg-[#E6F4EA] text-[#137333]'
+                          : delta < 0
+                            ? 'bg-[#FCE8E6] text-[#C5221F]'
+                            : 'bg-[#F1F3F4] text-[#5F6368]'
+                      }`}>
+                        {delta > 0 ? `▲ +${delta}` : delta < 0 ? `▼ ${delta}` : '— Same'}
+                      </span>
+                    </div>
+                    <div className="text-[11px] text-[#555555] mt-1 flex justify-between items-center">
+                      <span className="font-mono text-[10px] text-[#008000] truncate max-w-[180px]">{page?.category ?? 'Webpage'}</span>
+                      <span className="text-[10px] text-[#666666]">
+                        In Old Search: #{kwPos}
+                      </span>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          </div>
+        </div>
+
+        {/* Dynamic Explanation of Why Rankings Changed */}
+        <div className="mt-3 p-2 bg-white border border-[#CCCCCC]">
+          <div className="font-bold text-xs text-black mb-1">
+            💡 Why Did the Rankings Change?
+          </div>
+          <div className="space-y-1 text-xs text-[#333333]">
+            {pagerankTop5.slice(0, 3).map((r) => {
+              const p = pageMap.get(r.pageId);
+              const kwR = comparison.resultsByMode.keyword.find((item) => item.pageId === r.pageId);
+              const kwPos = kwR?.position ?? 99;
+              const delta = kwPos - r.position;
+              const inLinks = p?.links ? dataset.pages.filter((other) => other.links.includes(r.pageId)).length : 0;
+
+              return (
+                <div key={r.pageId} className="flex items-start gap-1.5">
+                  <span className="text-[#0000CC] font-bold">•</span>
+                  <span>
+                    <b>{p?.title}</b> {delta > 0 ? (
+                      <span className="text-[#008000]">moved up {delta} places</span>
+                    ) : delta < 0 ? (
+                      <span className="text-[#BC0000]">moved down {Math.abs(delta)} places</span>
+                    ) : (
+                      <span>held its position</span>
+                    )}{' '}
+                    because it receives {inLinks} incoming link{inLinks === 1 ? '' : 's'} from other websites, {delta > 0 ? 'giving it high community trust despite fewer keyword repetitions.' : 'anchoring its authority.'}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
+
+      {/* Formula & Theory Reference (Advanced Mode) */}
+      {isAdvancedMode && (
+        <div className="bg-[#F8F9FA] p-3 border border-[#808080] mb-3 text-xs">
+          <div className="font-bold text-[11px] uppercase tracking-wider mb-1 text-black">
+            Formula [Mathematical Formulation of the Hybrid Model]:
+          </div>
+          <pre className="font-mono text-xs bg-white p-2 border border-[#CCCCCC] text-black overflow-x-auto">
+            S(p) = (1 - α) · Score_TFIDF(p) + α · PR(p)
+          </pre>
+          <div className="text-[11px] text-[#555555] mt-1">
+            Where: <span className="font-mono">α ∈ [0.00, 1.00]</span> represents the link topology
+            authority weighting coefficient. Default academic damping factor:{' '}
+            <span className="font-mono">d = 0.85</span>.
+          </div>
+        </div>
+      )}
 
       {/* Interactive Controls Section */}
       <div className="mb-4">

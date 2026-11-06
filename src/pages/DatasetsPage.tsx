@@ -5,7 +5,7 @@ import { buildGraphTopology } from '../utils/graphUtils';
 import { SCENARIO_LABELS } from '../utils/format';
 
 export function DatasetsPage() {
-  const { datasets, dataset, datasetId, setDatasetId, setQuery, searchResponse } = useApp();
+  const { datasets, dataset, datasetId, setDatasetId, setQuery, searchResponse, isAdvancedMode } = useApp();
   const navigate = useNavigate();
 
   const [showExport, setShowExport] = useState(false);
@@ -44,6 +44,23 @@ export function DatasetsPage() {
 
   return (
     <div className="w-full flex flex-col font-sans text-black">
+      {/* Beginner Self-Explaining Banner */}
+      <div className="mb-3 p-3 bg-[#F0F4FF] border border-[#7F9DB9] text-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <div className="text-base font-bold text-[#0000CC] font-serif leading-tight">
+              Explore Example Webs
+            </div>
+            <p className="text-xs text-[#333333] mt-0.5">
+              See how websites connect to each other and why links affect their importance.
+            </p>
+          </div>
+          <div className="text-[11px] text-[#555555] bg-white px-2 py-1 border border-[#CCCCCC] sm:max-w-xs">
+            👉 <b>What to do:</b> Choose an example web scenario below to see how different website structures change search rankings.
+          </div>
+        </div>
+      </div>
+
       {/* Page Header */}
       <div className="mb-3">
         <div className="text-[11px] font-mono text-[#0000CC] font-bold uppercase mb-0.5">
@@ -52,11 +69,17 @@ export function DatasetsPage() {
         <h1 className="text-xl font-bold font-serif text-black leading-tight">
           Curated search corpora
         </h1>
-        <p className="text-xs text-[#555555] italic">
-          Anatomy of web hyperlink graphs under Markov random surfer stationary distributions.
-          Host: <span className="font-bold text-[#0000CC]">navajo.stanford.edu:8080/pr-lab/</span> |
-          Damping α = 0.850 | ε = 1.0e-7
-        </p>
+        {isAdvancedMode ? (
+          <p className="text-xs text-[#555555] italic">
+            Anatomy of web hyperlink graphs under Markov random surfer stationary distributions.
+            Host: <span className="font-bold text-[#0000CC]">navajo.stanford.edu:8080/pr-lab/</span> |
+            Damping α = 0.850 | ε = 1.0e-7
+          </p>
+        ) : (
+          <p className="text-xs text-[#555555]">
+            Each collection below is a realistic mini-web created to show a specific search engine challenge.
+          </p>
+        )}
       </div>
 
       <hr className="w-full border-t border-[#808080] mb-3" />

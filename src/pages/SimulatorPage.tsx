@@ -95,15 +95,66 @@ export function SimulatorPage() {
       ? pageMap.get(currentEvent.sourcePageId)
       : dataset.pages[0];
 
+  // Plain-English description of current event action
+  const friendlyActionDescription = useMemo(() => {
+    if (!currentEvent) {
+      return 'No active visitor. Press "Run deterministic simulation" below to start watching people browse!';
+    }
+    const destTitle = currentEvent.destinationPageId
+      ? pageMap.get(currentEvent.destinationPageId)?.title ?? currentEvent.destinationPageId
+      : 'a website';
+    const srcTitle = currentEvent.sourcePageId
+      ? pageMap.get(currentEvent.sourcePageId)?.title ?? currentEvent.sourcePageId
+      : 'a website';
+
+    switch (currentEvent.action) {
+      case 'SEARCH':
+        return `Visitor #${currentEvent.userId} typed a search query into MiniGoogle.`;
+      case 'SCAN':
+        return `Visitor #${currentEvent.userId} is scanning the search results list.`;
+      case 'CLICK_RESULT':
+        return `Visitor #${currentEvent.userId} clicked search result: "${destTitle}".`;
+      case 'DWELL':
+        return `Visitor #${currentEvent.userId} is reading "${destTitle}" for ${currentEvent.dwellTimeMs} milliseconds.`;
+      case 'SCROLL':
+        return `Visitor #${currentEvent.userId} scrolled down to read more of "${destTitle}".`;
+      case 'FOLLOW_LINK':
+        return `Visitor #${currentEvent.userId} clicked a hyperlink on "${srcTitle}" and moved to "${destTitle}".`;
+      case 'RETURN_TO_SEARCH':
+        return `Visitor #${currentEvent.userId} hit Back in their browser and returned to search results.`;
+      case 'END_SESSION':
+        return `Visitor #${currentEvent.userId} finished browsing and closed their browser.`;
+      default:
+        return `Visitor #${currentEvent.userId} engaged with ${destTitle}.`;
+    }
+  }, [currentEvent, pageMap]);
+
   return (
     <div className="w-full flex flex-col font-sans text-black">
+      {/* Beginner Self-Explaining Banner */}
+      <div className="mb-3 p-3 bg-[#F0F4FF] border border-[#7F9DB9] text-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <div className="text-base font-bold text-[#0000CC] font-serif leading-tight">
+              Watch How People Search the Web
+            </div>
+            <p className="text-xs text-[#333333] mt-0.5">
+              See how simulated visitors search, click results, and move between websites.
+            </p>
+          </div>
+          <div className="text-[11px] text-[#555555] bg-white px-2 py-1 border border-[#CCCCCC] sm:max-w-xs">
+            👉 <b>Action:</b> Pick how many visitors you want to simulate, then press <b>Run deterministic simulation</b> below!
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="mb-3">
         <div className="text-[11px] font-mono text-[#0000CC] font-bold uppercase mb-0.5">
           Stanford CS276 Lab: Monte Carlo Surfer Simulator (1998)
         </div>
         <h1 className="text-xl font-bold font-serif text-black leading-tight">
-          Random Surfer Behaviour Simulation
+          Surfer behaviour simulator
         </h1>
         <p className="text-xs text-[#555555] italic">
           Models the stochastic movement of human users browsing the hypertext web graph.
@@ -112,6 +163,24 @@ export function SimulatorPage() {
       </div>
 
       <hr className="w-full border-t border-[#808080] mb-3" />
+
+      {/* Real-Time Plain-English Activity Box */}
+      <div className="mb-4 p-3 bg-[#FFFDE6] border-2 border-[#E6DB55] text-xs">
+        <div className="flex items-center justify-between mb-1">
+          <span className="font-bold text-black uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+            <span className={`w-2.5 h-2.5 rounded-full ${isPlaying ? 'bg-[#008000] animate-pulse' : 'bg-[#808080]'}`} />
+            Live Visitor Activity
+          </span>
+          {events.length > 0 && (
+            <span className="font-mono text-[11px] text-[#555555]">
+              Step {currentEventIndex + 1} of {events.length}
+            </span>
+          )}
+        </div>
+        <p className="text-sm font-serif font-bold text-[#0000CC] m-0">
+          {friendlyActionDescription}
+        </p>
+      </div>
 
       {/* 1998 Netscape Communicator Window Frame */}
       <div
@@ -324,6 +393,23 @@ export function SimulatorPage() {
           Monte Carlo Simulation Parameters (Markov Web Graph)
         </legend>
 
+        {/* Quick Presets for Visitors */}
+        <div className="mb-2 p-1.5 bg-white border border-[#CCCCCC] flex flex-wrap items-center gap-2">
+          <span className="font-bold text-[#555555]">Quick Presets:</span>
+          {[10, 25, 50, 100].map((count) => (
+            <button
+              key={count}
+              type="button"
+              onClick={() => updateSimulationConfig({ userCount: count })}
+              className={`btn-retro text-xs py-0.5 px-2 ${
+                simulationConfig.userCount === count ? 'font-bold bg-[#E5ECF9] text-[#0000CC]' : ''
+              }`}
+            >
+              {count} Visitors
+            </button>
+          ))}
+        </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mt-1 mb-3">
           <div>
             <label className="block font-bold mb-0.5">Random Surfers (N):</label>
@@ -397,8 +483,8 @@ export function SimulatorPage() {
           >
             Reset
           </button>
-          <Link to="/analytics" className="btn-retro text-xs py-1 px-3">
-            View Analytics »
+          <Link to="/analytics" aria-label="Analytics" className="btn-retro text-xs py-1 px-3">
+            Analytics »
           </Link>
           <span className="ml-auto font-mono text-[11px] text-[#555555]">
             Iterations: {events.length} events recorded

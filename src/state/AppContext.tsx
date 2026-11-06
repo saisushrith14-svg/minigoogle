@@ -64,6 +64,11 @@ export interface AppContextValue {
   readonly behaviourScores?: Readonly<Record<string, number>>;
   readonly runSimulation: () => SimulationRun;
   readonly clearSimulation: () => void;
+  readonly isAdvancedMode: boolean;
+  readonly setIsAdvancedMode: (value: boolean) => void;
+  readonly toggleAdvancedMode: () => void;
+  readonly actionFeedback: string | null;
+  readonly setActionFeedback: (feedback: string | null) => void;
 }
 
 const AppContext = createContext<AppContextValue | undefined>(undefined);
@@ -83,6 +88,28 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
     ...DEFAULT_SIMULATION_CONFIG,
   });
   const [simulation, setSimulation] = useState<SimulationState | null>(null);
+  const [isAdvancedMode, setIsAdvancedModeState] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('minigoogle_advanced') === 'true';
+    } catch {
+      return false;
+    }
+  });
+  const [actionFeedback, setActionFeedback] = useState<string | null>(null);
+
+  const setIsAdvancedMode = useCallback((val: boolean) => {
+    setIsAdvancedModeState(val);
+    try {
+      localStorage.setItem('minigoogle_advanced', String(val));
+    } catch {
+      // ignore
+    }
+    setActionFeedback(val ? 'Advanced Mode enabled: raw metrics and tuning visible.' : 'Beginner Mode enabled: human-readable summaries active.');
+  }, []);
+
+  const toggleAdvancedMode = useCallback(() => {
+    setIsAdvancedMode(!isAdvancedMode);
+  }, [isAdvancedMode, setIsAdvancedMode]);
 
   const setDatasetId = useCallback((id: string) => {
     const next = getDatasetById(id);
@@ -90,6 +117,7 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
     setDatasetIdState(id);
     setQuery(next.defaultQuery ?? '');
     setSimulation(null);
+    setActionFeedback(`Now exploring: ${next.name.replace(/^Scenario \d+: /, '')} (${next.pages.length} webpages)`);
   }, []);
 
   const setKeywordWeight = useCallback(
@@ -117,6 +145,9 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
         pagerankWeight: 1 - share,
         behaviourWeight: previous.behaviourWeight,
       }),
+    );
+    setActionFeedback(
+      `Results updated: Keyword relevance ${(share * 100).toFixed(0)}%, PageRank ${((1 - share) * 100).toFixed(0)}%.`,
     );
   }, []);
 
@@ -186,6 +217,9 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       config: simulationConfig,
     });
     setSimulation({ run, key: simulationKey });
+    setActionFeedback(
+      `Simulation started: ${simulationConfig.userCount} visitors simulated on “${query || 'default'}”.`,
+    );
     return run;
   }, [
     baseMode,
@@ -225,14 +259,21 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       behaviourScores,
       runSimulation,
       clearSimulation,
+      isAdvancedMode,
+      setIsAdvancedMode,
+      toggleAdvancedMode,
+      actionFeedback,
+      setActionFeedback,
     }),
     [
+      actionFeedback,
       activeSimulation,
       behaviourScores,
       clearSimulation,
       comparison,
       dataset,
       datasetId,
+      isAdvancedMode,
       keywordWeights,
       mode,
       query,
@@ -240,12 +281,15 @@ export function AppProvider({ children }: { readonly children: ReactNode }) {
       resetKeywordWeights,
       runSimulation,
       searchResponse,
+      setActionFeedback,
       setDatasetId,
       setHybridSplit,
+      setIsAdvancedMode,
       setKeywordWeight,
       setRankingWeights,
       simulation?.run,
       simulationConfig,
+      toggleAdvancedMode,
       updateSimulationConfig,
     ],
   );

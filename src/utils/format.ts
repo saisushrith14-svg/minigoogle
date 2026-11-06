@@ -66,3 +66,73 @@ export function formatClock(ms: number): string {
 export function pluralize(count: number, singular: string, plural?: string): string {
   return count === 1 ? singular : (plural ?? `${singular}s`);
 }
+
+export interface RatingLevel {
+  readonly label: string;
+  readonly badgeColor: string;
+  readonly textColor: string;
+  readonly explanation: string;
+}
+
+export function getPageRankQuality(score: number, maxScore: number): RatingLevel {
+  const ratio = maxScore > 0 ? score / maxScore : 0;
+  if (ratio >= 0.65) {
+    return {
+      label: 'High Importance',
+      badgeColor: '#E6F4EA',
+      textColor: '#137333',
+      explanation: 'Receives direct links from multiple key websites in this network.',
+    };
+  }
+  if (ratio >= 0.30) {
+    return {
+      label: 'Moderate Importance',
+      badgeColor: '#FEF7E0',
+      textColor: '#B06000',
+      explanation: 'Linked by a few pages in this network.',
+    };
+  }
+  return {
+    label: 'Low Importance',
+    badgeColor: '#FCE8E6',
+    textColor: '#C5221F',
+    explanation: 'Has few or no incoming links from other websites.',
+  };
+}
+
+export function getKeywordQuality(score: number): RatingLevel {
+  if (score >= 0.65) {
+    return {
+      label: 'Strong Match',
+      badgeColor: '#E6F4EA',
+      textColor: '#137333',
+      explanation: 'Contains search words in the title, headings, and main content.',
+    };
+  }
+  if (score >= 0.30) {
+    return {
+      label: 'Moderate Match',
+      badgeColor: '#FEF7E0',
+      textColor: '#B06000',
+      explanation: 'Mentions search words in some sections of the page.',
+    };
+  }
+  return {
+    label: 'Weak Match',
+    badgeColor: '#FCE8E6',
+    textColor: '#C5221F',
+    explanation: 'Contains few or no matching words.',
+  };
+}
+
+export const CONCEPT_EXPLANATIONS: Readonly<Record<string, string>> = {
+  pagerank: 'An algorithm that estimates the importance of webpages based on how they link to each other.',
+  dataset: 'A small collection of example webpages used in this experiment (not the live internet).',
+  keyword: 'A method that scores webpages based on how well their words match your search terms.',
+  hybrid: 'A balanced search that combines text matching with link importance.',
+  damping: 'A number (usually 0.85) modeling how likely a web surfer is to follow a link rather than jump to another page.',
+  ctr: 'Click-Through Rate: The percentage of search result impressions that visitors clicked on.',
+  bounce: 'Bounce Rate: The percentage of visitors who left after reading only a single page.',
+  inlinks: 'Inbound links: Other webpages that link directly to this webpage.',
+  outlinks: 'Outbound links: Links on this page leading to other webpages.',
+};

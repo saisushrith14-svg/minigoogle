@@ -61,9 +61,130 @@ export function HomePage() {
 
   return (
     <div className="w-full flex flex-col items-center font-sans text-black">
+      {/* 5-SECOND RULE HERO SECTION */}
+      <div className="w-full max-w-[700px] mx-auto text-center mt-2 mb-6 space-y-3">
+        <RetroLogo size="xl" showTagline={false} />
+        
+        <h2 className="text-base sm:text-lg font-serif italic text-black font-normal">
+          Discover how search engines decide what you see first.
+        </h2>
+
+        <p className="text-xs sm:text-sm text-[#444444] max-w-[560px] mx-auto leading-relaxed">
+          Before Google, search engines mainly looked for matching words. Google's PageRank helped identify important pages by examining how websites linked to one another. Explore both approaches and see the difference yourself.
+        </p>
+
+        {/* Primary Call to Action Buttons */}
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <Link
+            to="/tour"
+            className="btn-retro py-2 px-5 text-sm font-bold text-[#0000CC] bg-[#FFFBEA] border-2 border-[#0000CC] shadow-sm hover:bg-[#FFF2B2]"
+          >
+            Start Exploring →
+          </Link>
+          <button
+            type="button"
+            onClick={() => handleSearch()}
+            className="btn-retro py-2 px-4 text-sm font-bold text-black"
+          >
+            Try a Search
+          </button>
+        </div>
+      </div>
+
+      {/* WHAT WOULD YOU LIKE TO EXPLORE? - 4 CARDS */}
+      <div className="w-full max-w-[720px] mx-auto mb-8">
+        <div className="text-center mb-3">
+          <h2 className="text-base font-bold font-serif text-black uppercase tracking-wider">
+            What would you like to explore?
+          </h2>
+          <p className="text-xs text-[#666666]">
+            Choose a starting point below, or follow the guided tour above.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+          {/* Option 1: Try a Search */}
+          <div className="p-3 bg-[#F8F9FA] border border-[#808080] flex flex-col justify-between space-y-2">
+            <div>
+              <div className="flex items-center space-x-1.5 mb-1">
+                <span className="text-lg">🔍</span>
+                <span className="font-bold text-sm text-[#0000CC] font-serif">1. Try a Search</span>
+              </div>
+              <p className="text-xs text-[#444444] leading-relaxed">
+                Search a collection of example websites and see why certain pages appear first.
+              </p>
+            </div>
+            <Link
+              to="/search"
+              className="btn-retro text-xs py-1 px-3 text-center font-bold text-[#0000CC]"
+            >
+              Try Searching »
+            </Link>
+          </div>
+
+          {/* Option 2: Compare Old Search vs Google */}
+          <div className="p-3 bg-[#F8F9FA] border border-[#808080] flex flex-col justify-between space-y-2">
+            <div>
+              <div className="flex items-center space-x-1.5 mb-1">
+                <span className="text-lg">⚖️</span>
+                <span className="font-bold text-sm text-[#0000CC] font-serif">2. Compare Old Search vs Google</span>
+              </div>
+              <p className="text-xs text-[#444444] leading-relaxed">
+                See how keyword-based search and PageRank can rank the same websites differently.
+              </p>
+            </div>
+            <Link
+              to="/compare"
+              className="btn-retro text-xs py-1 px-3 text-center font-bold text-[#0000CC]"
+            >
+              Compare Rankings »
+            </Link>
+          </div>
+
+          {/* Option 3: Explore the Web */}
+          <div className="p-3 bg-[#F8F9FA] border border-[#808080] flex flex-col justify-between space-y-2">
+            <div>
+              <div className="flex items-center space-x-1.5 mb-1">
+                <span className="text-lg">🌐</span>
+                <span className="font-bold text-sm text-[#0000CC] font-serif">3. Explore the Web</span>
+              </div>
+              <p className="text-xs text-[#444444] leading-relaxed">
+                Discover how websites connect to each other and why links affect their importance.
+              </p>
+            </div>
+            <Link
+              to="/datasets"
+              className="btn-retro text-xs py-1 px-3 text-center font-bold text-[#0000CC]"
+            >
+              Explore Websites »
+            </Link>
+          </div>
+
+          {/* Option 4: Watch People Browse */}
+          <div className="p-3 bg-[#F8F9FA] border border-[#808080] flex flex-col justify-between space-y-2">
+            <div>
+              <div className="flex items-center space-x-1.5 mb-1">
+                <span className="text-lg">🚶</span>
+                <span className="font-bold text-sm text-[#0000CC] font-serif">4. Watch People Browse</span>
+              </div>
+              <p className="text-xs text-[#444444] leading-relaxed">
+                Simulate people searching, clicking, and navigating between websites.
+              </p>
+            </div>
+            <Link
+              to="/simulator"
+              className="btn-retro text-xs py-1 px-3 text-center font-bold text-[#0000CC]"
+            >
+              Start Simulation »
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <hr className="w-full max-w-[720px] border-t border-[#808080] mb-6" />
+
       {/* 1998 Authentic Google Main Search Component */}
-      <div className="w-full max-w-[620px] mx-auto flex flex-col items-center text-center mt-2 mb-6">
-        <RetroLogo size="xl" showTagline={true} />
+      <div className="w-full max-w-[620px] mx-auto flex flex-col items-center text-center mb-6">
 
         {/* Vintage Search Form */}
         <form

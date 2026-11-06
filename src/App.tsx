@@ -9,6 +9,7 @@ import { AnalyticsPage } from './pages/AnalyticsPage';
 import { ComparisonPage } from './pages/ComparisonPage';
 import { LearnPage } from './pages/LearnPage';
 import { DatasetsPage } from './pages/DatasetsPage';
+import { GuidedTourPage } from './pages/GuidedTourPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 /** Route table without a router, so tests can mount it in a MemoryRouter. */
@@ -17,6 +18,7 @@ export function AppRoutes() {
     <Routes>
       <Route element={<Layout />}>
         <Route index element={<HomePage />} />
+        <Route path="tour" element={<GuidedTourPage />} />
         <Route path="search" element={<SearchPage />} />
         <Route path="graph" element={<GraphPage />} />
         <Route path="simulator" element={<SimulatorPage />} />

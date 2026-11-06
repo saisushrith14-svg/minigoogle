@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { KeywordWeights, RankingMode, RankingResult, WebPage } from '../../types';
 import { buildSnippet, highlightSegments } from '../../utils/snippet';
-import { formatPercent, formatScore } from '../../utils/format';
+import { formatPercent, formatScore, getKeywordQuality, getPageRankQuality } from '../../utils/format';
 import { FactorBreakdown } from './FactorBreakdown';
 
 function HighlightedText({ text, query }: { readonly text: string; readonly query: string }) {
@@ -42,6 +42,8 @@ export function ResultCard({
 }) {
   const [expanded, setExpanded] = useState(false);
   const snippet = buildSnippet(page.content, query);
+  const prQuality = getPageRankQuality(result.pageRank, 0.25);
+  const kwQuality = getKeywordQuality(result.keywordScore);
 
   return (
     <article className="mb-4 text-left font-sans">
@@ -83,6 +85,32 @@ export function ResultCard({
           {isKeyPage && (
             <span className="text-[#D0A600] font-bold ml-1 font-mono">[Key Anchor]</span>
           )}
+        </span>
+      </div>
+
+      {/* Human-Friendly Qualitative Badges */}
+      <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[11px]">
+        <span
+          className="px-1.5 py-0.5 border font-bold"
+          style={{
+            backgroundColor: prQuality.badgeColor,
+            color: prQuality.textColor,
+            borderColor: prQuality.textColor,
+          }}
+          title={prQuality.explanation}
+        >
+          Importance: {prQuality.label}
+        </span>
+        <span
+          className="px-1.5 py-0.5 border font-bold"
+          style={{
+            backgroundColor: kwQuality.badgeColor,
+            color: kwQuality.textColor,
+            borderColor: kwQuality.textColor,
+          }}
+          title={kwQuality.explanation}
+        >
+          Relevance: {kwQuality.label}
         </span>
       </div>
 
@@ -138,7 +166,7 @@ export function ResultCard({
           style={{ border: '1px solid #CCCCCC' }}
         >
           <p className="text-xs text-black leading-normal mb-2">
-            <b>Explanation:</b> {result.explanation}
+            {result.explanation}
           </p>
 
           <table className="table-retro text-xs mb-2">
