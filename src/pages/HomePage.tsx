@@ -171,12 +171,21 @@ export function HomePage() {
                 Simulate people searching, clicking, and navigating between websites.
               </p>
             </div>
-            <Link
-              to="/simulator"
-              className="btn-retro text-xs py-1 px-3 text-center font-bold text-[#0000CC]"
-            >
-              Start Simulation »
-            </Link>
+            <div className="flex gap-2">
+              <Link
+                to="/simulator"
+                className="btn-retro text-xs py-1 px-2.5 text-center font-bold text-[#0000CC] flex-1"
+              >
+                Start Simulation »
+              </Link>
+              <Link
+                to="/ocean"
+                className="btn-retro text-xs py-1 px-2.5 text-center font-bold bg-[#EBF8FF] text-[#0000CC] border-[#3182CE]"
+                title="Watch an actual human surfer physically ride waves between islands!"
+              >
+                🏄 Surf Ocean »
+              </Link>
+            </div>
           </div>
         </div>
       </div>

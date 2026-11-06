@@ -82,6 +82,16 @@ export function Layout() {
             </NavLink>
             <span className="text-[#808080]">|</span>
             <NavLink
+              to="/ocean"
+              aria-label="Ocean Surfer"
+              className={({ isActive }) =>
+                isActive ? 'font-bold text-[#0000CC] underline' : 'text-[#0000CC] underline'
+              }
+            >
+              🏄 Ocean Surfer
+            </NavLink>
+            <span className="text-[#808080]">|</span>
+            <NavLink
               to="/learn"
               aria-label="Learn"
               className={({ isActive }) =>

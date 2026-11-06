@@ -164,6 +164,22 @@ export function SimulatorPage() {
 
       <hr className="w-full border-t border-[#808080] mb-3" />
 
+      {/* Feature Callout to Human Ocean Surfer Game */}
+      <div className="mb-3 p-2 bg-[#EBF8FF] border border-[#3182CE] text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div className="flex items-center space-x-2">
+          <span className="text-xl">🏄</span>
+          <div>
+            <b>Interactive 2D Pixel-Art Simulation:</b> Watch an actual human character physically surf waves between webpage islands!
+          </div>
+        </div>
+        <Link
+          to="/ocean"
+          className="btn-retro text-xs py-1 px-3 whitespace-nowrap font-bold bg-white text-[#0000CC] hover:bg-[#E5ECF9]"
+        >
+          Launch Human Ocean Surfer 🏄 »
+        </Link>
+      </div>
+
       {/* Real-Time Plain-English Activity Box */}
       <div className="mb-4 p-3 bg-[#FFFDE6] border-2 border-[#E6DB55] text-xs">
         <div className="flex items-center justify-between mb-1">

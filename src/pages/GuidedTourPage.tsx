@@ -444,6 +444,19 @@ export function GuidedTourPage() {
                 Open Simulator »
               </Link>
             </div>
+
+            <div className="p-3 border border-[#3182CE] bg-[#EBF8FF] space-y-1 sm:col-span-2">
+              <div className="flex items-center space-x-1.5">
+                <span className="text-base">🏄</span>
+                <span className="font-bold text-sm text-[#0000CC]">5. Human Ocean Surfer (Interactive 2D World)</span>
+              </div>
+              <p className="text-[#2D3748]">
+                Watch an actual human surfer physically ride waves between webpage islands and teleport through portals using the live Random Surfer algorithm!
+              </p>
+              <Link to="/ocean" className="btn-retro inline-block text-xs py-0.5 px-3 font-bold bg-white text-[#0000CC] border-[#3182CE]">
+                Launch Human Ocean Surfer 🏄 »
+              </Link>
+            </div>
           </div>
 
           <div className="p-3 bg-[#EBF3FB] border border-[#0000CC] text-xs flex justify-between items-center">
@@ -482,3 +495,4 @@ export function GuidedTourPage() {
     </div>
   );
 }
+
